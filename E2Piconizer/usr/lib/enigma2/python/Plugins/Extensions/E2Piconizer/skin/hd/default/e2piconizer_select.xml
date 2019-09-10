@@ -1,0 +1,43 @@
+
+<screen name="e2piconizerSelect" position="0,0" size="1280,720" backgroundColor="#15263d" flags="wfNoBorder">
+
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/hd/default/images/background.jpg" position="0,0" size="1280,720" zPosition="-2"/>
+
+        <widget source="session.VideoPicture" render="Pig" position="0,0"  size="306,172" backgroundColor="#ff000000" zPosition="2" />
+
+        <widget name="description" position="346,40" size="653,93" font="Regular;20" foregroundColor="#ffffff" backgroundColor="#15263d" halign="left" valign="top" transparent="1" />
+
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/icons/logo-HD.png" position="1040,40" size="200,42" alphatest="blend" />
+
+        <widget source="Title" render="Label" position="1000,104" size="240,28"  valign="center" halign="right" font="Regular;24"  transparent="1" foregroundColor="#00aeef" backgroundColor="#15263d"/>
+
+        <widget name="piconsource" position="13,204" size="280,80" font="Regular;20" foregroundColor="#00aeef" backgroundColor="#00070f" halign="center" valign="top" transparent="1" />
+
+        <!--<widget name="trimmarks" position="12,338" size="281,174" alphatest="blend" transparent="1" />-->
+        <widget name="preview" position="42,360" size="220,132" alphatest="blend" transparent="1" />
+
+
+        <widget source="global.CurrentTime" render="Label" position="0,680" size="306,40" font="Regular;20" foregroundColor="#00aeef" backgroundColor="#15263d" valign="center" halign="center" transparent="1" >
+                <convert type="ClockToText">Format:%A, %b %d, %H.%M</convert>
+        </widget>
+
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/hd/default/images/key_red.png" position="346,686" size="6,28" zPosition="1"/>
+		<widget source="key_red" render="Label" position="358,680" size="178,40" font="Regular;20" valign="center" transparent="1" noWrap="1" foregroundColor="#ffffff" backgroundColor="#15263d" halign="left" zPosition="1" />
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/hd/default/images/key_green.png"  position="525,686" size="6,28" zPosition="1" />
+		<widget source="key_green" render="Label" position="537,680" size="178,40" font="Regular;20" valign="center" transparent="1" noWrap="1" foregroundColor="#ffffff" backgroundColor="#15263d" halign="left" zPosition="1" />
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/hd/default/images/key_yellow.png"  position="704,686" size="6,28" zPosition="1" />
+		<widget source="key_yellow" render="Label" position="716,680" size="178,40" font="Regular;20" valign="center" transparent="1" noWrap="1" foregroundColor="#ffffff" backgroundColor="#15263d" halign="left" zPosition="1"/>
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/hd/default/images/key_blue.png"  position="882,686" size="6,28" zPosition="1" />
+		<widget source="key_blue" render="Label" position="894,680" size="178,40" font="Regular;20" valign="center" transparent="1" noWrap="1" foregroundColor="#ffffff" backgroundColor="#15263d" halign="left" zPosition="1"/>
+
+        <eLabel text="Channel Name" position="346,196" size="893,37" font="Regular;20" foregroundColor="#00aeef" backgroundColor="#00070f" valign="center" halign="left" transparent="1" />
+        <eLabel text="Last Modified (Server)" position="346,196" size="893,37" font="Regular;20" foregroundColor="#00aeef" backgroundColor="#00070f" valign="center" halign="right" transparent="1" />
+        
+        <widget name="text" position="346,234" size="893,410" font="Regular;20"  foregroundColor="#ffffff" backgroundColor="#00070f" transparent="1" zPosition="2" />
+        
+        <widget name="list" textOffset="8,0" position="346,234" size="893,410" font="Regular;20"  foregroundColor="#ffffff" backgroundColor="#00070f"
+        foregroundColorSelected="#ffffff" backgroundColorSelected="#15263d" selectionPixmap="/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/hd/default/images/select-1340-72.png"
+        itemHeight="37" scrollbarMode="showOnDemand" transparent="1" zPosition="2" />
+  </screen>
+  
+
