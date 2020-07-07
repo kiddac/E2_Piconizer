@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-from __future__ import absolute_import
+#from __future__ import absolute_import
 
 from plugin import graphic_directory, glass_directory
 from PIL import Image, ImageOps, ImageDraw, ImageChops

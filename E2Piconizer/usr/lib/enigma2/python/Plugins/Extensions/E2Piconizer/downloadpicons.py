@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-from __future__ import absolute_import
+#from __future__ import absolute_import
 
 # for localized messages
 from . import _
@@ -111,7 +111,7 @@ class E2Piconizer_DownloadPicons(Screen):
 		self['action'].setText(_('Making Funky Picons'))
 		self.progresscurrent += 1
 		self['progress'].setValue(self.progresscurrent)
-		self['status'].setText(_('Picon %d of %d') % (self.progresscurrent, self.job_total))
+		self['status'].setText('Picon %d of %d') % (self.progresscurrent, self.job_total)
 
 		if self.progresscurrent == self.selectedlength:
 			self.timer3 = eTimer()
