@@ -1,18 +1,21 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from Components.ActionMap import ActionMap, NumberActionMap
+# for localized messages
+from . import _
+
+from Components.ActionMap import NumberActionMap
 
 from Components.ConfigList import ConfigListScreen
 from Components.Pixmap import Pixmap
 from Components.Label import Label
 from Components.Sources.StaticText import StaticText
-from plugin import skin_path, cfg, hdr, graphic_directory, glass_directory, testpicons_directory
+from plugin import skin_path, cfg, testpicons_directory
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
-from enigma import getDesktop, eSize, ePoint
+from enigma import getDesktop, ePoint
 from Screens.LocationBox import LocationBox
-from Components.config import *
+from Components.config import config, getConfigListEntry, configfile
 import buildgfx
 import selectpicons
 import E2Globals
@@ -45,8 +48,6 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
 
 		self.onChangedEntry = []
 		self.list = []
-
-		im = ""
 
 		self.preview = ""
 
@@ -290,6 +291,5 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
 
 	def showPicon(self):
 		self["preview"].instance.setPixmapFromFile(self.preview)
-		pos = self["preview"].getPosition()
 		self["preview"].instance.move(ePoint(E2Globals.piconx + E2Globals.offsetx, E2Globals.picony + E2Globals.offsety))
 		self["trimmarks"].instance.setPixmapFromFile(E2Globals.trimmarks)
