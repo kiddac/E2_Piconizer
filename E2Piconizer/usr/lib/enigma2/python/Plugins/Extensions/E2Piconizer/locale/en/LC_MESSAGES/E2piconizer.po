@@ -1,0 +1,566 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2020-07-07 23:42+0100\n"
+"PO-Revision-Date: 2020-07-07 23:42+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"X-Poedit-Basepath: ../../..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: downloadpicons.py:47
+msgid "Downloadng Picons"
+msgstr ""
+
+#: downloadpicons.py:49
+msgid "Building Picons..."
+msgstr ""
+
+#: downloadpicons.py:78
+msgid "No picons selected."
+msgstr ""
+
+#: downloadpicons.py:111
+msgid "Making Funky Picons"
+msgstr ""
+
+#: downloadpicons.py:143
+msgid "Create Picons"
+msgstr ""
+
+#: main.py:38
+msgid "Settings"
+msgstr ""
+
+#: main.py:47 selectpicons.py:57
+msgid "Cancel"
+msgstr ""
+
+#: main.py:48
+msgid "OK"
+msgstr ""
+
+#: main.py:49
+msgid "Reset Position"
+msgstr ""
+
+#: main.py:80
+msgid "Picon source"
+msgstr ""
+
+#: main.py:80
+msgid ""
+"Select the source of your picons.\n"
+"\n"
+"Horizon sources will only download a picon of max size 160 pixels wide.\n"
+"If larger picon size selected it will just be centered at this size."
+msgstr ""
+
+#: main.py:81
+msgid "Offline picon location"
+msgstr ""
+
+#: main.py:81
+msgid ""
+"Select the location of where your offline picon sources are located.\n"
+"Press 'OK' to change location."
+msgstr ""
+
+#: main.py:82
+msgid "Download location"
+msgstr ""
+
+#: main.py:82
+msgid ""
+"Select the location of where to download picons to.\n"
+"Press 'OK' to change location.\n"
+"Recommended to download to a separate folder on your usb/hdd, then transfer and rename manually or via eChannelizer."
+msgstr ""
+
+#: main.py:83
+msgid "Picon size"
+msgstr ""
+
+#: main.py:83
+msgid "Select the size of the picons."
+msgstr ""
+
+#: main.py:84
+msgid "Test picon"
+msgstr ""
+
+#: main.py:84
+msgid "Select the picon to visualise how your picons will appear."
+msgstr ""
+
+#: main.py:85
+msgid "Download size"
+msgstr ""
+
+#: main.py:85
+msgid ""
+"Select the size of the picon to be downloaded.\n"
+"Larger picon download helps reduce antialias edge jaggies."
+msgstr ""
+
+#: main.py:86
+msgid "Colour Palette"
+msgstr ""
+
+#: main.py:86
+msgid "Select the picon bit depth. 24bit is normal highest quality, 8bit is 256 max colours."
+msgstr ""
+
+#: main.py:87
+msgid "Background type"
+msgstr ""
+
+#: main.py:87
+msgid "Select the background for your picon."
+msgstr ""
+
+#: main.py:88
+msgid "Background colour"
+msgstr ""
+
+#: main.py:88
+msgid "Select background colour."
+msgstr ""
+
+#: main.py:89
+msgid "Background transparency"
+msgstr ""
+
+#: main.py:89
+msgid "Select the transparency of background colour."
+msgstr ""
+
+#: main.py:90
+msgid "Background graphic"
+msgstr ""
+
+#: main.py:90
+msgid ""
+"Select a graphic to use as a background for your picon set.\n"
+"Background graphics live in /etc/engima2/e2piconizer/backgrounds. Minimum size must be 400 x 240 pixels."
+msgstr ""
+
+#: main.py:91
+msgid "Padding"
+msgstr ""
+
+#: main.py:91
+msgid ""
+"Select the padding around your picon graphic.\n"
+"i.e if using a background graphic."
+msgstr ""
+
+#: main.py:92
+msgid "Rounded corners"
+msgstr ""
+
+#: main.py:92
+msgid "Select the corner radius of your picon set."
+msgstr ""
+
+#: main.py:93
+msgid "Reflection"
+msgstr ""
+
+#: main.py:93
+msgid "Apply a mirror reflection to the graphic."
+msgstr ""
+
+#: main.py:94
+msgid "Reflection strength"
+msgstr ""
+
+#: main.py:94
+msgid "Adjust the strength/opacity of the picon reflection."
+msgstr ""
+
+#: main.py:95
+msgid "Reflection size %"
+msgstr ""
+
+#: main.py:95
+msgid "Adjust the height percent of the picon reflection."
+msgstr ""
+
+#: main.py:96
+msgid "Offset-Y"
+msgstr ""
+
+#: main.py:96
+msgid "Adjust the offset height of the picon and reflection."
+msgstr ""
+
+#: main.py:97
+msgid "Glass effect"
+msgstr ""
+
+#: main.py:97
+msgid "Apply a glass effect over the picon."
+msgstr ""
+
+#: main.py:98
+msgid "Glass graphic"
+msgstr ""
+
+#: main.py:98
+msgid ""
+"Select a graphic to use as the glass effect for your picon set.\n"
+"Glass graphics live in /etc/engima2/e2piconizer/glass. Minimum size must be 400 x 240 pixels."
+msgstr ""
+
+#: main.py:205
+msgid "Choose Directory:"
+msgstr ""
+
+#: main.py:206
+msgid "Choose directory"
+msgstr ""
+
+#: main.py:230
+msgid "Really close without saving settings?"
+msgstr ""
+
+#: plugin.py:43
+msgid "Horizon TV (AT) - Austrian / German"
+msgstr ""
+
+#: plugin.py:44
+msgid "Horizon TV (CH) - Swiss / German / French / Italian"
+msgstr ""
+
+#: plugin.py:45
+msgid "Horizon TV (CZ) - Czech"
+msgstr ""
+
+#: plugin.py:46
+msgid "Horizon TV (DE) - German"
+msgstr ""
+
+#: plugin.py:47
+msgid "Horizon TV (HU) - Hungarian"
+msgstr ""
+
+#: plugin.py:48
+msgid "Horizon TV (NL) - Dutch"
+msgstr ""
+
+#: plugin.py:49
+msgid "Horizon TV (PL) - Polish"
+msgstr ""
+
+#: plugin.py:50
+msgid "Horizon TV (RO) - Romanian"
+msgstr ""
+
+#: plugin.py:51
+msgid "Horizon TV (SK) - Slovakian"
+msgstr ""
+
+#: plugin.py:52
+msgid "Local media folder"
+msgstr ""
+
+#: plugin.py:56 plugin.py:67
+msgid "MiniPicons - 50x30 Pixel"
+msgstr ""
+
+#: plugin.py:57 plugin.py:68
+msgid "Picons - 100x60 Pixel"
+msgstr ""
+
+#: plugin.py:58 plugin.py:69
+msgid "XPicons - 220x132 Pixel"
+msgstr ""
+
+#: plugin.py:59 plugin.py:70
+msgid "ZPicons - 220x88 Pixel (Display Duo2)"
+msgstr ""
+
+#: plugin.py:60
+msgid "ZZPicons1 - 400x160 bzw"
+msgstr ""
+
+#: plugin.py:61
+msgid "ZZPicons2 - 400x170 Pixel"
+msgstr ""
+
+#: plugin.py:62
+msgid "ZZZPicons - 400x240 Pixel"
+msgstr ""
+
+#: plugin.py:75
+msgid "Amber"
+msgstr ""
+
+#: plugin.py:76
+msgid "Brown"
+msgstr ""
+
+#: plugin.py:77
+msgid "Burgundy"
+msgstr ""
+
+#: plugin.py:78
+msgid "Cobalt"
+msgstr ""
+
+#: plugin.py:79
+msgid "Crimson"
+msgstr ""
+
+#: plugin.py:80
+msgid "Cyan"
+msgstr ""
+
+#: plugin.py:81
+msgid "Dark Blue"
+msgstr ""
+
+#: plugin.py:82
+msgid "Dark Brown"
+msgstr ""
+
+#: plugin.py:83
+msgid "Dark Grey"
+msgstr ""
+
+#: plugin.py:84
+msgid "Magenta"
+msgstr ""
+
+#: plugin.py:85
+msgid "Lime"
+msgstr ""
+
+#: plugin.py:86
+msgid "Indigo"
+msgstr ""
+
+#: plugin.py:87
+msgid "Bright Green"
+msgstr ""
+
+#: plugin.py:88
+msgid "Green"
+msgstr ""
+
+#: plugin.py:89
+msgid "Turquoise"
+msgstr ""
+
+#: plugin.py:90
+msgid "Emerald"
+msgstr ""
+
+#: plugin.py:91
+msgid "Mauve"
+msgstr ""
+
+#: plugin.py:92
+msgid "Mandarin"
+msgstr ""
+
+#: plugin.py:93
+msgid "Medium Blue"
+msgstr ""
+
+#: plugin.py:94
+msgid "Midnight"
+msgstr ""
+
+#: plugin.py:95
+msgid "Navy"
+msgstr ""
+
+#: plugin.py:96
+msgid "Olive"
+msgstr ""
+
+#: plugin.py:97
+msgid "Orange"
+msgstr ""
+
+#: plugin.py:98
+msgid "Pink"
+msgstr ""
+
+#: plugin.py:99
+msgid "Red"
+msgstr ""
+
+#: plugin.py:100
+msgid "Royal Blue"
+msgstr ""
+
+#: plugin.py:101
+msgid "Sienna"
+msgstr ""
+
+#: plugin.py:102
+msgid "Steel"
+msgstr ""
+
+#: plugin.py:103
+msgid "Teal"
+msgstr ""
+
+#: plugin.py:104
+msgid "Violet"
+msgstr ""
+
+#: plugin.py:105
+msgid "Bright Yellow"
+msgstr ""
+
+#: plugin.py:106
+msgid "Yellow"
+msgstr ""
+
+#: plugin.py:107
+msgid "Black"
+msgstr ""
+
+#: plugin.py:108
+msgid "Greyscale 1"
+msgstr ""
+
+#: plugin.py:109
+msgid "Greyscale 2"
+msgstr ""
+
+#: plugin.py:110
+msgid "Greyscale 3"
+msgstr ""
+
+#: plugin.py:111
+msgid "Greyscale 4"
+msgstr ""
+
+#: plugin.py:112
+msgid "Greyscale 5"
+msgstr ""
+
+#: plugin.py:113
+msgid "Greyscale 6"
+msgstr ""
+
+#: plugin.py:114
+msgid "Greyscale 7"
+msgstr ""
+
+#: plugin.py:115
+msgid "Greyscale 8"
+msgstr ""
+
+#: plugin.py:116
+msgid "Greyscale 9"
+msgstr ""
+
+#: plugin.py:117
+msgid "Greyscale 10"
+msgstr ""
+
+#: plugin.py:118
+msgid "Greyscale 11"
+msgstr ""
+
+#: plugin.py:119
+msgid "Greyscale 12"
+msgstr ""
+
+#: plugin.py:120
+msgid "Greyscale 13"
+msgstr ""
+
+#: plugin.py:121
+msgid "White"
+msgstr ""
+
+#: plugin.py:154
+msgid "Normal"
+msgstr ""
+
+#: plugin.py:154
+msgid "Large (slower)"
+msgstr ""
+
+#: plugin.py:154
+msgid "Maximum (slow)"
+msgstr ""
+
+#: plugin.py:155
+msgid "Transparent"
+msgstr ""
+
+#: plugin.py:155
+msgid "Colour"
+msgstr ""
+
+#: plugin.py:155
+msgid "Graphic"
+msgstr ""
+
+#: plugin.py:175
+msgid "24 bit full colour"
+msgstr ""
+
+#: plugin.py:175
+msgid "8 bit 256 indexed colours"
+msgstr ""
+
+#: plugin.py:185
+msgid "E2 Piconizer"
+msgstr ""
+
+#: plugin.py:196
+msgid "KiddaC - Picon Downloader / Creator"
+msgstr ""
+
+#: plugin.py:197
+msgid "E2Piconizer"
+msgstr ""
+
+#: selectpicons.py:43
+msgid "Select Picons"
+msgstr ""
+
+#: selectpicons.py:62
+msgid ""
+"Select the picons you wish to download. \n"
+"Press OK to toggle the selection."
+msgstr ""
+
+#: selectpicons.py:65
+msgid "Downloading picon list. Please wait..."
+msgstr ""
+
+#: selectpicons.py:103
+msgid "Continue"
+msgstr ""
+
+#: selectpicons.py:104 selectpicons.py:153
+msgid "Sort Z-A"
+msgstr ""
+
+#: selectpicons.py:105
+msgid "Toggle All"
+msgstr ""
+
+#: selectpicons.py:157
+msgid "Sort Date"
+msgstr ""
+
+#: selectpicons.py:161
+msgid "Sort A-Z"
+msgstr ""
