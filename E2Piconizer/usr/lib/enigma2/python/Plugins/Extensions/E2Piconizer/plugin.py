@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-from __future__ import absolute_import
+#from __future__ import absolute_import
 
 # for localized messages
 from . import _
@@ -38,8 +38,8 @@ tempdirectory = '/var/volatile/tmp/tempdownload'
 hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
 
 SourceList = [
-	('Sky UK', _('Sky UK/IE')),
-	('Virgin UK', _('Virgin UK/IE')),
+	('Sky UK', 'Sky UK/IE'),
+	('Virgin UK', 'Virgin UK/IE'),
 	('Horizon AT', _('Horizon TV (AT) - Austrian / German')),
 	('Horizon CH', _('Horizon TV (CH) - Swiss / German / French / Italian')),
 	('Horizon CZ', _('Horizon TV (CZ) - Czech')),
@@ -122,27 +122,27 @@ ColourList = [
 	]
 
 TransparencyList = [
-	("FF", _("0%")),
-	("F4", _("5%")),
-	("E7", _("10%")),
-	("DA", _("15%")),
-	("CD", _("20%")),
-	("C0", _("25%")),
-	("B4", _("30%")),
-	("A7", _("35%")),
-	("9A", _("40%")),
-	("8D", _("45%")),
-	("80", _("50%")),
-	("74", _("55%")),
-	("67", _("60%")),
-	("5A", _("65%")),
-	("4D", _("70%")),
-	("40", _("75%")),
-	("34", _("80%")),
-	("27", _("85%")),
-	("1A", _("90%")),
-	("0D", _("95%")),
-	("00", _("100%"))
+	("FF", "0%"),
+	("F4", "5%"),
+	("E7", "10%"),
+	("DA", "15%"),
+	("CD", "20%"),
+	("C0", "25%"),
+	("B4", "30%"),
+	("A7", "35%"),
+	("9A", "40%"),
+	("8D", "45%"),
+	("80", "50%"),
+	("74", "55%"),
+	("67", "60%"),
+	("5A", "65%"),
+	("4D", "70%"),
+	("40", "75%"),
+	("34", "80%"),
+	("27", "85%"),
+	("1A", "90%"),
+	("0D", "95%"),
+	("00", "100%")
 	]
 
 config.plugins.E2Piconizer = ConfigSubsection()
