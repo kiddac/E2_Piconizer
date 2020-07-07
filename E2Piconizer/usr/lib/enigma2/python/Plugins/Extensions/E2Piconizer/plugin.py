@@ -1,8 +1,11 @@
-from Components.config import *
-from enigma import getDesktop, addFont, eTimer
+from Components.config import config, ConfigSelection, ConfigSubsection, ConfigYesNo, ConfigSelectionNumber,ConfigDirectory
+from enigma import getDesktop
 from Plugins.Plugin import PluginDescriptor
 import os
-import socket
+
+# for localized messages
+from . import _
+
 screenwidth = getDesktop(0).size()
 
 
