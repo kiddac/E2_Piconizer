@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# for localized messages
+from . import _
+
 from Screens.Screen import Screen
 from plugin import skin_path, cfg, screenwidth, hdr
 from Components.ActionMap import ActionMap, NumberActionMap
@@ -243,7 +246,8 @@ class E2Piconizer_SelectPicons(Screen):
 		try:
 			response = urlopen(url[i])
 			return json.loads(response.read())
-		except Exception, e:
+		except Exception as e:
+			print(e)
 			return None
 
 
@@ -340,16 +344,19 @@ class E2Piconizer_SelectPicons(Screen):
 				response = urlopen(request)
 
 			except HTTPError as e:
+				print(e)
 				try:
 					url = url.replace('/800', '/0')
 					request = Request(url)
 					request.get_method = lambda: 'HEAD'
 					response = urlopen(request)
 
-				except Exception, e:
+				except Exception as e:
+					print(e)
 					response = ''
 
-			except Exception, e:
+			except Exception as e:
+				print(e)
 				response = ''
 
 			if response != '':
@@ -469,6 +476,5 @@ class E2Piconizer_SelectPicons(Screen):
 	def showPicon(self):
 		if self['preview'].instance:
 			self['preview'].instance.setPixmapFromFile(self.preview)
-			pos = self['preview'].getPosition()
 			self["preview"].instance.move(ePoint(E2Globals.piconx + E2Globals.offsetx, E2Globals.picony + E2Globals.offsety))
 			self["trimmarks"].instance.setPixmapFromFile(E2Globals.trimmarks)
