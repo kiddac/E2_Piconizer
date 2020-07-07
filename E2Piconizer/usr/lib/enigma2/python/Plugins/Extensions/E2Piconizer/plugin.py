@@ -1,10 +1,19 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function
+from __future__ import absolute_import
+
+# for localized messages
+from . import _
+
+
 from Components.config import config, ConfigSelection, ConfigSubsection, ConfigYesNo, ConfigSelectionNumber,ConfigDirectory
 from enigma import getDesktop
 from Plugins.Plugin import PluginDescriptor
 import os
 
-# for localized messages
-from . import _
+
 
 screenwidth = getDesktop(0).size()
 
