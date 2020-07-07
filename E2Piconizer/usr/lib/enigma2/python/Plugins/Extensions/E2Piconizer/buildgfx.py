@@ -1,9 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from plugin import graphic_directory, glass_directory, testpicons_directory
-from enigma import eSize, ePoint
-from PIL import Image, ImageEnhance, ImageOps, ImageFile, ImageDraw, ImageChops
+from plugin import graphic_directory, glass_directory
+from PIL import Image, ImageOps, ImageDraw, ImageChops
 
 
 def createEmptyImage(piconSize):
@@ -69,7 +68,7 @@ def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflec
 	mirrorheight = float(reflectionsize) / 100
 
 	ref = ImageOps.flip(im)
-	reflectionheight = int(imageh * mirrorheight)
+	# reflectionheight = int(imageh * mirrorheight)
 
 	left = 0
 	top = 0
