@@ -1,25 +1,32 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# for localized messages
+from . import _
+
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ProgressBar import ProgressBar
 from Screens.MessageBox import MessageBox
 from enigma import eTimer
-from plugin import skin_path, cfg, tempdirectory, hdr
+from plugin import skin_path, cfg, hdr
 import os
-import sys
-import shutil
 
 from urllib2 import urlopen, Request
 import re
 import E2Globals
 import buildgfx
 import io
-from multiprocessing.pool import ThreadPool, Pool
+from multiprocessing.pool import ThreadPool
 import unicodedata
 from PIL import Image
+import sys
+
+pythonVer = 2
+if sys.version_info.major == 3:
+	pythonVer = 3
+	unicode = str
 
 
 class E2Piconizer_DownloadPicons(Screen):
@@ -28,6 +35,7 @@ class E2Piconizer_DownloadPicons(Screen):
 		Screen.__init__(self, session)
 		self.session = session
 		self.selected = selected
+	
 
 		skin = skin_path + 'e2piconizer_progress.xml'
 		with open(skin, 'r') as f:
@@ -73,7 +81,7 @@ class E2Piconizer_DownloadPicons(Screen):
 		try:
 			response = urlopen(imgRequest)
 		except Exception as e:
-			print e
+			print(e)
 			response = ""
 			pass
 
@@ -83,7 +91,12 @@ class E2Piconizer_DownloadPicons(Screen):
 
 			piconname = self.selected[i][0]
 
-			piconname = unicodedata.normalize('NFKD', unicode(piconname, 'utf_8', errors='ignore')).encode('ASCII', 'ignore')
+			if pythonVer == 2:
+				self.piconname = unicodedata.normalize('NFKD', unicode(piconname, 'utf_8', errors='ignore')).encode('ASCII', 'ignore')
+			elif pythonVer == 3:
+				piconname = unicodedata.normalize('NFKD', piconname).encode('ASCII', 'ignore').decode('ascii')
+
+				
 			piconname = re.sub('[^a-z0-9]', '', piconname.replace('&', 'and').replace('+', 'plus').replace('*', 'star').lower())
 			self.timer3 = eTimer()
 			self.timer3.start(self.pause, 1)
@@ -148,10 +161,12 @@ class E2Piconizer_DownloadPicons(Screen):
 		piconSize = E2Globals.piconSize
 		bg = buildgfx.createEmptyImage(piconSize)
 
+		"""
 		if cfg.source.value != 'Local':
 			picon_location = tempdirectory + "/"
 		else:
 			picon_location = cfg.locallocation.value
+			"""
 
 		if cfg.background.value == 'colour':
 			bg = buildgfx.addColour(piconSize, cfg.colour.value, cfg.transparency.value)
