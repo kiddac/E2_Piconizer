@@ -1,34 +1,43 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-#from __future__ import absolute_import
+
+# from __future__ import absolute_import
 
 # for localized messages
 from . import _
+from . import buildgfx
+from . import downloadpicons
+from . import E2Globals
 
+from .E2SelectionList import E2PSelectionList, E2PSelectionEntryComponent
+from .plugin import skin_path, cfg, screenwidth, hdr
 
-from Screens.Screen import Screen
-from plugin import skin_path, cfg, screenwidth, hdr
 from Components.ActionMap import ActionMap, NumberActionMap
 from Components.Label import Label
 from Components.Sources.StaticText import StaticText
 from Components.Pixmap import Pixmap
 from enigma import getDesktop, eSize, ePoint, eTimer
-
-from E2SelectionList import E2PSelectionList, E2PSelectionEntryComponent
-
 from multiprocessing.pool import ThreadPool
-from urllib2 import urlopen, Request, HTTPError
-import time
+from PIL import Image
+from Screens.Screen import Screen
+
 import datetime
 import json
 import os
-import buildgfx
-import downloadpicons
-import E2Globals
-from PIL import Image
+import time
+import sys
 
+pythonVer = 2
+if sys.version_info.major == 3:
+	pythonVer = 3
+
+if pythonVer == 2:
+	from urllib2 import urlopen, Request, HTTPError
+else:
+	from urllib.request import urlopen, Request
+	from urllib.error import HTTPError
+	
 
 class E2Piconizer_SelectPicons(Screen):
 
