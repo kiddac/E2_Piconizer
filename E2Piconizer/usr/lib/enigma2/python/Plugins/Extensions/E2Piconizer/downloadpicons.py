@@ -1,35 +1,39 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-#from __future__ import absolute_import
+
+# from __future__ import absolute_import
 
 # for localized messages
 from . import _
+from . import E2Globals
+from . import buildgfx
 
-from Screens.Screen import Screen
+from .plugin import skin_path, cfg, hdr
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ProgressBar import ProgressBar
-from Screens.MessageBox import MessageBox
 from enigma import eTimer
-from plugin import skin_path, cfg, hdr
-import os
-
-from urllib2 import urlopen, Request
-import re
-import E2Globals
-import buildgfx
-import io
 from multiprocessing.pool import ThreadPool
-import unicodedata
 from PIL import Image
+from Screens.MessageBox import MessageBox
+from Screens.Screen import Screen
+
+import io
+import os
+import re
 import sys
+import unicodedata
+
 
 pythonVer = 2
 if sys.version_info.major == 3:
 	pythonVer = 3
-	unicode = str
+
+if pythonVer == 2:
+	from urllib2 import urlopen, Request
+else:
+	from urllib.request import urlopen, Request
 
 
 class E2Piconizer_DownloadPicons(Screen):
@@ -38,7 +42,6 @@ class E2Piconizer_DownloadPicons(Screen):
 		Screen.__init__(self, session)
 		self.session = session
 		self.selected = selected
-	
 
 		skin = skin_path + 'e2piconizer_progress.xml'
 		with open(skin, 'r') as f:
@@ -99,7 +102,6 @@ class E2Piconizer_DownloadPicons(Screen):
 			elif pythonVer == 3:
 				piconname = unicodedata.normalize('NFKD', piconname).encode('ASCII', 'ignore').decode('ascii')
 
-				
 			piconname = re.sub('[^a-z0-9]', '', piconname.replace('&', 'and').replace('+', 'plus').replace('*', 'star').lower())
 			self.timer3 = eTimer()
 			self.timer3.start(self.pause, 1)
@@ -111,7 +113,7 @@ class E2Piconizer_DownloadPicons(Screen):
 		self['action'].setText(_('Making Funky Picons'))
 		self.progresscurrent += 1
 		self['progress'].setValue(self.progresscurrent)
-		self['status'].setText('Picon %d of %d') % (self.progresscurrent, self.job_total)
+		self['status'].setText('Picon %d of %d' % (self.progresscurrent, self.job_total))
 
 		if self.progresscurrent == self.selectedlength:
 			self.timer3 = eTimer()
