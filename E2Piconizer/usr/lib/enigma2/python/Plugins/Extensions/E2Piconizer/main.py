@@ -1,27 +1,26 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-#from __future__ import absolute_import
+
+# from __future__ import absolute_import
 
 # for localized messages
 from . import _
+from . import buildgfx
+from . import selectpicons
+from . import E2Globals
 
+from .plugin import skin_path, cfg, testpicons_directory
 from Components.ActionMap import NumberActionMap
-
+from Components.config import config, getConfigListEntry, configfile
 from Components.ConfigList import ConfigListScreen
 from Components.Pixmap import Pixmap
 from Components.Label import Label
 from Components.Sources.StaticText import StaticText
-from plugin import skin_path, cfg, testpicons_directory
-from Screens.MessageBox import MessageBox
-from Screens.Screen import Screen
 from enigma import getDesktop, ePoint
 from Screens.LocationBox import LocationBox
-from Components.config import config, getConfigListEntry, configfile
-import buildgfx
-import selectpicons
-import E2Globals
+from Screens.MessageBox import MessageBox
+from Screens.Screen import Screen
 
 screenwidth = getDesktop(0).size()
 

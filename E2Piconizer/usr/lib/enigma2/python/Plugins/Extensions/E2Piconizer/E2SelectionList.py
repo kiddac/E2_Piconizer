@@ -1,14 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-#from __future__ import absolute_import
 
+# from __future__ import absolute_import
+
+from .plugin import skin_path, screenwidth
 from Components.MenuList import MenuList
 from enigma import eListboxPythonMultiContent, gFont, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER
 from Tools.LoadPixmap import LoadPixmap
+
 import skin
-from plugin import skin_path, screenwidth
+
 selectiononpng = LoadPixmap(cached=True, path=skin_path + 'images/lock_on.png')
 selectionoffpng = LoadPixmap(cached=True, path=skin_path + 'images/lock_off.png')
 

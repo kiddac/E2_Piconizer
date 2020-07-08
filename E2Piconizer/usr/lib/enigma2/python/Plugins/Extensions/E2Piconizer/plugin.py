@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
-#from __future__ import absolute_import
+
+# from __future__ import absolute_import
 
 # for localized messages
 from . import _
@@ -176,7 +176,7 @@ cfg.bitdepth = ConfigSelection(default='24bit', choices=[('24bit', _('24 bit ful
 
 
 def main(session, **kwargs):
-	import main
+	from . import main
 	session.open(main.E2Piconizer_Main)
 
 
