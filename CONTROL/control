@@ -1,9 +1,9 @@
 Package: enigma2-plugin-extensions-e2piconizer
-Version: 1.10_20200708
+Version: 1.11_20200720
 Section: extra
 Priority: optional
 Architecture: all
 Maintainer: kiddac
 Description: E2 Piconizer - Picon Downloader/Creator
-Depends: python-mmap, python-multiprocessing
+#Depends: python-multiprocessing | python3-multiprocessing, python3-multiprocessing | python-multiprocessing
 Source: https://www.linuxsat-support.com
