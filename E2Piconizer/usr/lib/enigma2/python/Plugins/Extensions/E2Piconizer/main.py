@@ -22,6 +22,16 @@ from Screens.LocationBox import LocationBox
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 
+import os
+import sys
+
+
+try:
+    pythonVer = sys.version_info.major
+except:
+    pythonVer = 2
+
+
 screenwidth = getDesktop(0).size()
 
 
@@ -57,13 +67,14 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
         self["preview"] = Pixmap()
 
         ConfigListScreen.__init__(self, self.list, session=self.session, on_change=self.changedEntry)
-        self.initConfig()
-        self.createSetup()
+
+        self.onFirstExecBegin.append(self.check_dependencies)
+
         self.onLayoutFinish.append(self.__layoutFinished)
 
     def __layoutFinished(self):
         self.setTitle(self.setup_title)
-        self.updatePreview(E2Globals.piconSize)
+        
 
     def changedEntry(self):
         self.item = self['config'].getCurrent()
@@ -71,6 +82,28 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
             x()
         self.createSetup()
         self.updatePreview(E2Globals.piconSize)
+
+    def check_dependencies(self):
+        dependencies = True
+        if pythonVer == 3:
+            if not os.path.isfile("/usr/lib/python3.8/imghdr.py") \
+                or not os.path.exists("/usr/lib/python3.8/site-packages/PIL") \
+                    or not os.path.exists("/usr/lib/python3.8/multiprocessing"):
+                dependencies = False
+
+        else:
+            if not os.path.isfile("/usr/lib/python2.7/imghdr.pyo") \
+                or not os.path.exists("/usr/lib/python2.7/site-packages/PIL") \
+                    or not os.path.exists("/usr/lib/python2.7/multiprocessing"):
+                dependencies = False
+
+        if dependencies is False:
+            if not access("/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh", X_OK):
+                chmod("/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh", 0o0755)
+            cmd1 = ". /usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh"
+            self.session.openWithCallback(self.initConfig, Console, title="Checking Python Dependencies", cmdlist=[cmd1], closeOnSuccess=False)
+        else:
+            self.initConfig()
 
     def initConfig(self):
         self.cfg_source = getConfigListEntry(_('Picon source'), cfg.source, _("Select the source of your picons.\n\nHorizon sources will only download a picon of max size 160 pixels wide.\nIf larger picon size selected it will just be centered at this size."))
@@ -92,6 +125,7 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
         self.cfg_offsety = getConfigListEntry(_('Offset-Y'), cfg.offsety, _('Adjust the offset height of the picon and reflection.'))
         self.cfg_glass = getConfigListEntry(_('Glass effect'), cfg.glass, _('Apply a glass effect over the picon.'))
         self.cfg_glassgfx = getConfigListEntry(_('Glass graphic'), cfg.glassgfx, _('Select a graphic to use as the glass effect for your picon set.\nGlass graphics live in /etc/engima2/e2piconizer/glass. Minimum size must be 400 x 240 pixels.'))
+        self.createSetup()
 
     def createSetup(self):
         if cfg.size.value == "minipicons":
@@ -166,6 +200,8 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
 
         self['config'].list = self.list
         self['config'].l.setList(self.list)
+        
+        self.updatePreview(E2Globals.piconSize)
 
     def save(self):
         if self['config'].isChanged():
