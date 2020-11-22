@@ -95,7 +95,7 @@ class E2Piconizer_DownloadPicons(Screen):
             piconname = self.selected[i][0]
 
             if pythonVer == 2:
-                self.piconname = unicodedata.normalize('NFKD', unicode(piconname, 'utf_8', errors='ignore')).encode('ASCII', 'ignore')
+                piconname = unicodedata.normalize('NFKD', unicode(piconname, 'utf_8', errors='ignore')).encode('ASCII', 'ignore')
             elif pythonVer == 3:
                 piconname = unicodedata.normalize('NFKD', piconname).encode('ASCII', 'ignore').decode('ascii')
 

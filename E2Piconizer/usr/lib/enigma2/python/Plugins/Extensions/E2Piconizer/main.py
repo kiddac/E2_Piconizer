@@ -74,7 +74,6 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
 
     def __layoutFinished(self):
         self.setTitle(self.setup_title)
-        
 
     def changedEntry(self):
         self.item = self['config'].getCurrent()
@@ -85,21 +84,15 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
 
     def check_dependencies(self):
         dependencies = True
-        if pythonVer == 3:
-            if not os.path.isfile("/usr/lib/python3.8/imghdr.py") \
-                or not os.path.exists("/usr/lib/python3.8/site-packages/PIL") \
-                    or not os.path.exists("/usr/lib/python3.8/multiprocessing"):
-                dependencies = False
 
-        else:
-            if not os.path.isfile("/usr/lib/python2.7/imghdr.pyo") \
-                or not os.path.exists("/usr/lib/python2.7/site-packages/PIL") \
-                    or not os.path.exists("/usr/lib/python2.7/multiprocessing"):
-                dependencies = False
+        try:
+            from multiprocessing.pool import ThreadPool
+            from PIL import Image
+        except:
+            dependencies = False
 
         if dependencies is False:
-            if not access("/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh", X_OK):
-                chmod("/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh", 0o0755)
+            chmod("/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh", 0o0755)
             cmd1 = ". /usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh"
             self.session.openWithCallback(self.initConfig, Console, title="Checking Python Dependencies", cmdlist=[cmd1], closeOnSuccess=False)
         else:
@@ -200,7 +193,7 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
 
         self['config'].list = self.list
         self['config'].l.setList(self.list)
-        
+
         self.updatePreview(E2Globals.piconSize)
 
     def save(self):
