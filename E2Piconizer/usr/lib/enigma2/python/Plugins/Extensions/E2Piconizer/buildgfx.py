@@ -38,7 +38,7 @@ def createPreview(picon, piconSize, padding):
 
     pwidth = width - (padding * 2)
     pheight = height - (padding * 2)
-    thumbsize = [pwidth, pheight]
+    thumbsize = [int(pwidth), int(pheight)]
 
     im = Image.open(picon)
     im = im.convert('RGBA')
@@ -60,7 +60,7 @@ def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflec
     pwidth = width - (padding * 2)
     pheight = height - (padding * 2)
 
-    thumbsize = [pwidth, pheight]
+    thumbsize = [int(pwidth), int(pheight)]
 
     im = Image.open(picon)
     im = im.convert('RGBA')
