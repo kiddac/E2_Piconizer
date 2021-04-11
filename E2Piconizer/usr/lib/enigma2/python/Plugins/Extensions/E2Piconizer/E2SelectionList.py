@@ -30,10 +30,10 @@ def E2PSelectionEntryComponent(channel, last_modified_timestamp, last_modified_s
 
     res = [
         (channel, last_modified_timestamp, last_modified_short, piconurl, index, selected),
-        (eListboxPythonMultiContent.TYPE_TEXT, dx, dy, dw, dh, 0, RT_HALIGN_LEFT|RT_VALIGN_CENTER, channel)
+        (eListboxPythonMultiContent.TYPE_TEXT, dx, dy, dw, dh, 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, channel)
     ]
 
-    res.append((eListboxPythonMultiContent.TYPE_TEXT, mx, my, mw, mh, 0, RT_HALIGN_RIGHT|RT_VALIGN_CENTER, last_modified_short))
+    res.append((eListboxPythonMultiContent.TYPE_TEXT, mx, my, mw, mh, 0, RT_HALIGN_RIGHT | RT_VALIGN_CENTER, last_modified_short))
 
     if selected:
         res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, ix, iy, iw, ih, selectiononpng))
