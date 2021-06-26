@@ -1,8 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-from __future__ import division
-
 from .plugin import graphic_directory, glass_directory
 from PIL import Image, ImageOps, ImageDraw, ImageChops
 
@@ -33,8 +28,8 @@ def addGraphic(piconSize, background):
 def createPreview(picon, piconSize, padding):
     width, height = piconSize
 
-    if padding * 2 > (height / 2):
-        padding = int(height / 2) / 2
+    if padding * 2 > (height // 2):
+        padding = int(height // 2) // 2
 
     pwidth = width - (padding * 2)
     pheight = height - (padding * 2)
@@ -54,8 +49,8 @@ def createPreview(picon, piconSize, padding):
 def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflectionsize):
     width, height = piconSize
 
-    if padding * 2 > (height / 2):
-        padding = int(height / 2) / 2
+    if padding * 2 > (height // 2):
+        padding = int(height // 2) // 2
 
     pwidth = width - (padding * 2)
     pheight = height - (padding * 2)
@@ -67,10 +62,9 @@ def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflec
     im = autocrop_image(im)
     imagew, imageh = im.size
 
-    mirrorheight = float(reflectionsize) / 100
+    mirrorheight = float(reflectionsize) // 100
 
     ref = ImageOps.flip(im)
-    # reflectionheight = int(imageh * mirrorheight)
 
     left = 0
     top = 0
