@@ -1,10 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-
-# from __future__ import absolute_import
-
-# for localized messages
 from . import _
 from . import E2Globals
 from . import buildgfx
@@ -155,13 +148,6 @@ class E2Piconizer_DownloadPicons(Screen):
         filename = piconfile
         piconSize = E2Globals.piconSize
         bg = buildgfx.createEmptyImage(piconSize)
-
-        """
-        if cfg.source.value != 'Local':
-            picon_location = tempdirectory + "/"
-        else:
-            picon_location = cfg.locallocation.value
-            """
 
         if cfg.background.value == 'colour':
             bg = buildgfx.addColour(piconSize, cfg.colour.value, cfg.transparency.value)
