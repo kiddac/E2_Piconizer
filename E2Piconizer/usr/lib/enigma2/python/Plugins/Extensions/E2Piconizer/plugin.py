@@ -1,12 +1,4 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-
-# from __future__ import absolute_import
-
-# for localized messages
 from . import _
-
 
 from Components.config import config, ConfigSelection, ConfigSubsection, ConfigYesNo, ConfigSelectionNumber, ConfigDirectory
 from enigma import getDesktop
@@ -189,9 +181,7 @@ def Plugins(**kwargs):
 
     description = _('KiddaC - Picon Downloader / Creator')
     name = _('E2Piconizer')
-    # main_menu = PluginDescriptor(name = name, description = description, where= PluginDescriptor.WHERE_MENU, fnc=mainmenu, needsRestart=True)
 
     result = [PluginDescriptor(name=name, description=description, where=PluginDescriptor.WHERE_PLUGINMENU, icon=iconFile, fnc=main)]
 
-    # result.append(main_menu)
     return result
