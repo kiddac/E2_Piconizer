@@ -1,10 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-
-# from __future__ import absolute_import
-
-# for localized messages
 from . import _
 from . import buildgfx
 from . import downloadpicons
