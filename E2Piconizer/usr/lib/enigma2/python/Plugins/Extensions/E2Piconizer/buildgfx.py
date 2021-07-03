@@ -1,5 +1,42 @@
 from .plugin import graphic_directory, glass_directory
-from PIL import Image, ImageOps, ImageDraw, ImageChops
+from PIL import Image, ImageOps, ImageDraw, ImageChops, ImageFile, PngImagePlugin
+import re
+
+
+_simple_palette = re.compile(b"^\xff*\x00\xff*$")
+
+
+def mycall(self, cid, pos, length):
+    if cid.decode("ascii") == "tRNS":
+        return self.chunk_TRNS(pos, length)
+    else:
+        return getattr(self, "chunk_" + cid.decode("ascii"))(pos, length)
+
+
+def mychunk_TRNS(self, pos, length):
+    s = ImageFile._safe_read(self.fp, length)
+    if self.im_mode == "P":
+        if _simple_palette.match(s):
+            i = s.find(b"\0")
+            if i >= 0:
+                self.im_info["transparency"] = i
+        else:
+            self.im_info["transparency"] = s
+    elif self.im_mode in ("1", "L", "I"):
+        self.im_info["transparency"] = i16(s)
+    elif self.im_mode == "RGB":
+        self.im_info["transparency"] = i16(s), i16(s, 2), i16(s, 4)
+    return s
+
+
+try:
+    pythonVer = sys.version_info.major
+except:
+    pythonVer = 2
+
+if pythonVer != 2:
+    PngImagePlugin.ChunkStream.call = mycall
+    PngImagePlugin.PngStream.chunk_TRNS = mychunk_TRNS
 
 
 def createEmptyImage(piconSize):
@@ -28,8 +65,8 @@ def addGraphic(piconSize, background):
 def createPreview(picon, piconSize, padding):
     width, height = piconSize
 
-    if padding * 2 > (height // 2):
-        padding = int(height // 2) // 2
+    if padding * 2 > (height / 2):
+        padding = int((height / 2) / 2)
 
     pwidth = width - (padding * 2)
     pheight = height - (padding * 2)
@@ -49,8 +86,8 @@ def createPreview(picon, piconSize, padding):
 def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflectionsize):
     width, height = piconSize
 
-    if padding * 2 > (height // 2):
-        padding = int(height // 2) // 2
+    if padding * 2 > (height / 2):
+        padding = int((height // 2) // 2)
 
     pwidth = width - (padding * 2)
     pheight = height - (padding * 2)
@@ -62,7 +99,7 @@ def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflec
     im = autocrop_image(im)
     imagew, imageh = im.size
 
-    mirrorheight = float(reflectionsize) // 100
+    mirrorheight = float(reflectionsize) / 100
 
     ref = ImageOps.flip(im)
 
@@ -112,15 +149,15 @@ def blendBackground(im, bg, background, reflection, offsety):
 
     bg_alpha = ImageChops.screen(bg_alpha, temp)
 
-    if background != "transparent":
-        if reflection:
-            bg.paste(im, ((bgwidth - imagew) // 2, (bgheight - imageh) // 2 + int(offsety)), im)
-        else:
-            bg.paste(im, ((bgwidth - imagew) // 2, (bgheight - imageh) // 2), im)
-
-        bg.putalpha(bg_alpha)
+    
+    if reflection:
+        bg.paste(im, ((bgwidth - imagew) // 2, (bgheight - imageh) // 2 + int(offsety)), im)
     else:
-        bg.paste(im, ((bgwidth - imagew) // 2, (bgheight - imageh) // 2))
+        bg.paste(im, ((bgwidth - imagew) // 2, (bgheight - imageh) // 2), im)
+
+    bg.putalpha(bg_alpha)
+
+    #bg.paste(im, ((bgwidth - imagew) // 2, (bgheight - imageh) // 2))
 
     return bg
 

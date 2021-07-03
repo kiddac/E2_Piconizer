@@ -12,7 +12,7 @@ from Components.Sources.StaticText import StaticText
 from Components.Pixmap import Pixmap
 from enigma import getDesktop, eSize, ePoint, eTimer
 from multiprocessing.pool import ThreadPool
-from PIL import Image
+from PIL import Image, ImageFile, PngImagePlugin
 from Screens.Screen import Screen
 
 import datetime
@@ -20,16 +20,47 @@ import json
 import os
 import time
 import sys
+import re
 
-pythonVer = 2
-if sys.version_info.major == 3:
-    pythonVer = 3
+
+_simple_palette = re.compile(b"^\xff*\x00\xff*$")
+
+
+def mycall(self, cid, pos, length):
+    if cid.decode("ascii") == "tRNS":
+        return self.chunk_TRNS(pos, length)
+    else:
+        return getattr(self, "chunk_" + cid.decode("ascii"))(pos, length)
+
+
+def mychunk_TRNS(self, pos, length):
+    s = ImageFile._safe_read(self.fp, length)
+    if self.im_mode == "P":
+        if _simple_palette.match(s):
+            i = s.find(b"\0")
+            if i >= 0:
+                self.im_info["transparency"] = i
+        else:
+            self.im_info["transparency"] = s
+    elif self.im_mode in ("1", "L", "I"):
+        self.im_info["transparency"] = i16(s)
+    elif self.im_mode == "RGB":
+        self.im_info["transparency"] = i16(s), i16(s, 2), i16(s, 4)
+    return s
+
+
+try:
+    pythonVer = sys.version_info.major
+except:
+    pythonVer = 2
 
 if pythonVer == 2:
     from urllib2 import urlopen, Request, HTTPError
 else:
     from urllib.request import urlopen, Request
     from urllib.error import HTTPError
+    PngImagePlugin.ChunkStream.call = mycall
+    PngImagePlugin.PngStream.chunk_TRNS = mychunk_TRNS
 
 
 class E2Piconizer_SelectPicons(Screen):
@@ -421,7 +452,6 @@ class E2Piconizer_SelectPicons(Screen):
                 f.close()
             except:
                 self.temp = ''
-                pass
 
     def updatePreview(self, piconSize):
         bg = buildgfx.createEmptyImage(piconSize)
@@ -445,10 +475,10 @@ class E2Piconizer_SelectPicons(Screen):
         if cfg.background.value != 'transparent' and cfg.glass.value:
             im = buildgfx.addGlass(piconSize, cfg.glassgfx.value, im)
 
-        im = buildgfx.addCorners(im, cfg.rounded.value)
+        if cfg.rounded != 0:
+            im = buildgfx.addCorners(im, cfg.rounded.value)
 
         self.savePicon(im)
-        self.showPicon()
 
     def savePicon(self, im):
         self.preview = '/tmp/preview.png'
@@ -458,8 +488,10 @@ class E2Piconizer_SelectPicons(Screen):
             mask = Image.eval(alpha, lambda a: 255 if a <= 128 else 0)
             im.paste(255, mask)
             im.save(self.preview, transparency=255)
+            self.showPicon()
         else:
             im.save(self.preview, 'PNG')
+            self.showPicon()
 
     def showPicon(self):
         if self['preview'].instance:

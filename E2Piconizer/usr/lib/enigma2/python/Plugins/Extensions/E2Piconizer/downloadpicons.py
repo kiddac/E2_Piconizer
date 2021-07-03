@@ -8,7 +8,7 @@ from Components.Label import Label
 from Components.ProgressBar import ProgressBar
 from enigma import eTimer
 from multiprocessing.pool import ThreadPool
-from PIL import Image
+from PIL import Image, ImageFile, PngImagePlugin
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 
@@ -19,6 +19,32 @@ import sys
 import unicodedata
 
 
+_simple_palette = re.compile(b"^\xff*\x00\xff*$")
+
+
+def mycall(self, cid, pos, length):
+    if cid.decode("ascii") == "tRNS":
+        return self.chunk_TRNS(pos, length)
+    else:
+        return getattr(self, "chunk_" + cid.decode("ascii"))(pos, length)
+
+
+def mychunk_TRNS(self, pos, length):
+    s = ImageFile._safe_read(self.fp, length)
+    if self.im_mode == "P":
+        if _simple_palette.match(s):
+            i = s.find(b"\0")
+            if i >= 0:
+                self.im_info["transparency"] = i
+        else:
+            self.im_info["transparency"] = s
+    elif self.im_mode in ("1", "L", "I"):
+        self.im_info["transparency"] = i16(s)
+    elif self.im_mode == "RGB":
+        self.im_info["transparency"] = i16(s), i16(s, 2), i16(s, 4)
+    return s
+
+
 pythonVer = 2
 if sys.version_info.major == 3:
     pythonVer = 3
@@ -27,11 +53,14 @@ if pythonVer == 2:
     from urllib2 import urlopen, Request
 else:
     from urllib.request import urlopen, Request
+    PngImagePlugin.ChunkStream.call = mycall
+    PngImagePlugin.PngStream.chunk_TRNS = mychunk_TRNS
 
 
 class E2Piconizer_DownloadPicons(Screen):
 
     def __init__(self, session, selected):
+
         Screen.__init__(self, session)
         self.session = session
         self.selected = selected
@@ -137,7 +166,12 @@ class E2Piconizer_DownloadPicons(Screen):
     def makeLocalPicon(self, lfile, i):
         image_file = lfile[i][3]
         piconname = lfile[i][0]
-        piconname = piconname.encode('ASCII', 'ignore').lower()
+
+        if pythonVer == 2:
+            piconname = unicodedata.normalize('NFKD', unicode(piconname, 'utf_8', errors='ignore')).encode('ASCII', 'ignore')
+        elif pythonVer == 3:
+            piconname = unicodedata.normalize('NFKD', piconname).encode('ASCII', 'ignore').decode('ascii')
+
         piconname = re.sub('[^a-z0-9]', '', piconname.replace('&', 'and').replace('+', 'plus').replace('*', 'star').lower())
 
         self.timer3 = eTimer()
@@ -176,7 +210,9 @@ class E2Piconizer_DownloadPicons(Screen):
         if cfg.background.value != 'transparent' and cfg.glass.value:
             im = buildgfx.addGlass(piconSize, cfg.glassgfx.value, im)
 
-        im = buildgfx.addCorners(im, cfg.rounded.value)
+        if cfg.rounded != 0:
+            im = buildgfx.addCorners(im, cfg.rounded.value)
+
         self.timer1 = eTimer()
         self.timer1.start(self.pause, 1)
         self.timer1.callback.append(self.savePicon(im, piconname))
