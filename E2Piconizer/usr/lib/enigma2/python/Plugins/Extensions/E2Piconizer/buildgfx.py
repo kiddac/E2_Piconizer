@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from .plugin import graphic_directory, glass_directory
 from PIL import Image, ImageOps, ImageDraw, ImageChops, ImageFile, PngImagePlugin
 import re
