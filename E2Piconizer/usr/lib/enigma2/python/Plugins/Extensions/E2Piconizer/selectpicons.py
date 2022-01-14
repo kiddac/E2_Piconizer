@@ -7,14 +7,13 @@ from . import downloadpicons
 from . import E2Globals
 
 from .E2SelectionList import E2PSelectionList, E2PSelectionEntryComponent
-from .plugin import skin_path, cfg, screenwidth, hdr
+from .plugin import skin_path, cfg, screenwidth, hdr, hasConcurrent, hasMultiprocessing
 
 from Components.ActionMap import ActionMap, NumberActionMap
 from Components.Label import Label
 from Components.Sources.StaticText import StaticText
 from Components.Pixmap import Pixmap
 from enigma import getDesktop, eSize, ePoint, eTimer
-from multiprocessing.pool import ThreadPool
 from PIL import Image, ImageFile, PngImagePlugin
 from Screens.Screen import Screen
 
@@ -273,26 +272,48 @@ class E2Piconizer_SelectPicons(Screen):
         if cfg.source.value == 'Local':
             self.urls = []
 
-    def fetch_url(self, url, i):
+    def fetch_url(self, url):
         try:
-            response = urlopen(url[i])
+            response = urlopen(url)
             return json.loads(response.read())
         except Exception as e:
             print(e)
             return None
 
-    def log_result(self, result):
-        self.result_list.append(result)
-
     def getJson(self):
         urllength = len(self.urls)
-        pool = ThreadPool(20)
+
         self.result_list = []
 
-        for i in range(urllength):
-            pool.apply_async(self.fetch_url, args=(self.urls, i), callback=self.log_result)
-        pool.close()
-        pool.join()
+        if hasConcurrent:
+            print("******* epiconizer concurrent futures ******")
+            try:
+                from concurrent.futures import ThreadPoolExecutor, as_completed
+
+                executor = ThreadPoolExecutor(max_workers=20)
+                with executor:
+                    results = executor.map(self.fetch_url, self.urls)
+                    for result in results:
+                        self.result_list.append(result)
+
+            except Exception as e:
+                print(e)
+
+        elif hasMultiprocessing:
+            try:
+                print("*** epiconizer multiprocessing ThreadPool ***")
+                from multiprocessing.pool import ThreadPool
+                pool = ThreadPool(20)
+
+                results = pool.imap(self.fetch_url, self.urls)
+                for result in results:
+                    self.result_list.append(result)
+
+                pool.close()
+                pool.join()
+
+            except Exception as e:
+                print(e)
 
         # copy the json channels into a seperate channel base list.
         channels_json = []
@@ -360,8 +381,8 @@ class E2Piconizer_SelectPicons(Screen):
             picon_values['selected'] = True
             self.picon_list.append(picon_values)
 
-    def getLastModifiedDate(self, picon_list, i):
-        url = picon_list[i]['picon_url']
+    def getLastModifiedDate(self, picon_list):
+        url = picon_list['picon_url']
         if url != '':
             try:
                 request = Request(url)
@@ -388,36 +409,53 @@ class E2Piconizer_SelectPicons(Screen):
                 headers = response.info()
                 if 'Last-Modified' in headers:
                     lastModified = headers.get('Last-Modified')
-                    self.picon_list[i]['last_modified'] = lastModified
-                    self.picon_list[i]['last_modified_timestamp'] = time.mktime(datetime.datetime.strptime(lastModified, '%a, %d %b %Y %H:%M:%S %Z').timetuple())
-                    self.picon_list[i]['last_modified_short'] = time.strftime('%d/%m/%Y', time.localtime(int(self.picon_list[i]['last_modified_timestamp'])))
+                    picon_list['last_modified'] = lastModified
+                    picon_list['last_modified_timestamp'] = time.mktime(datetime.datetime.strptime(lastModified, '%a, %d %b %Y %H:%M:%S %Z').timetuple())
+                    picon_list['last_modified_short'] = time.strftime('%d/%m/%Y', time.localtime(int(picon_list['last_modified_timestamp'])))
                 else:
-                    self.picon_list[i]['last_modified'] = ''
-                    self.picon_list[i]['last_modified_timestamp'] = ''
-                    self.picon_list[i]['last_modified_short'] = ''
+                    picon_list['last_modified'] = ''
+                    picon_list['last_modified_timestamp'] = ''
+                    picon_list['last_modified_short'] = ''
 
-                self.picon_list[i]['sid'] = self.picon_list[i]['sid']
-                self.picon_list[i]['title'] = self.picon_list[i]['title']
-                self.picon_list[i]['status'] = True
-                self.picon_list[i]['picon_url'] = url
+                picon_list['status'] = True
+                picon_list['picon_url'] = url
             else:
-                self.picon_list[i]['status'] = False
+                picon_list['status'] = False
+
+            self.new_picon_list.append(picon_list)
 
     def getHeader(self):
-        # presults = ThreadPool(20).imap(self.getLastModifiedDate, self.picon_list)
         urllength = len(self.picon_list)
-        pool = ThreadPool(20)
         self.result_list = []
+        self.new_picon_list = []
 
-        for i in range(urllength):
-            pool.apply_async(self.getLastModifiedDate, args=(self.picon_list, i))
-        pool.close()
-        pool.join()
+        if hasConcurrent:
+            try:
+                from concurrent.futures import ThreadPoolExecutor, as_completed
+
+                executor = ThreadPoolExecutor(max_workers=30)
+                with executor:
+                    result = executor.map(self.getLastModifiedDate, self.picon_list)
+
+            except Exception as e:
+                print(e)
+
+        elif hasMultiprocessing:
+            try:
+                from multiprocessing.pool import ThreadPool
+                pool = ThreadPool(20)
+
+                pool.imap(self.getLastModifiedDate, self.picon_list)
+                pool.close()
+                pool.join()
+
+            except Exception as e:
+                print(e)
 
     def addHeader(self):
 
         # remove status 404
-        templist = [x for x in self.picon_list if not x['status'] is False]
+        templist = [x for x in self.new_picon_list if not x['status'] is False]
         self.picon_list = templist
 
         # reindex list

@@ -5,12 +5,11 @@ from . import _
 from . import E2Globals
 from . import buildgfx
 
-from .plugin import skin_path, cfg, hdr
+from .plugin import skin_path, cfg, hdr, hasConcurrent, hasMultiprocessing
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ProgressBar import ProgressBar
 from enigma import eTimer
-from multiprocessing.pool import ThreadPool
 from PIL import Image, ImageFile, PngImagePlugin
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
@@ -129,8 +128,7 @@ class E2Piconizer_DownloadPicons(Screen):
             self.timer3.start(self.pause, 1)
             self.timer3.callback.append(self.makePicon(image_file, piconname))
 
-    def log_result(self, result):
-        self.result_list.append(result)
+    def log_result(self, result=None):
         self['action'].setText(_('Making Funky Picons'))
         self.progresscurrent += 1
         self['progress'].setValue(self.progresscurrent)
@@ -143,17 +141,42 @@ class E2Piconizer_DownloadPicons(Screen):
 
     def buildPicons(self):
         self.selectedlength = len(self.selected)
-        pool = ThreadPool(20)
-        self.result_list = []
 
-        if cfg.source.value != 'Local':
-            for i in range(self.selectedlength):
-                pool.apply_async(self.fetch_url, args=(self.selected, i), callback=self.log_result)
-            pool.close()
-        else:
-            for i in range(self.selectedlength):
-                pool.apply_async(self.makeLocalPicon, args=(self.selected, i), callback=self.log_result)
-            pool.close()
+        if hasConcurrent:
+            print("******* trying concurrent futures 1 ******")
+            try:
+                from concurrent.futures import ThreadPoolExecutor
+                executor = ThreadPoolExecutor(max_workers=20)
+
+                if cfg.source.value != 'Local':
+                    for i in range(self.selectedlength):
+                        results = executor.submit(self.fetch_url, self.selected, i)
+                        results.add_done_callback(self.log_result)
+                else:
+                    for i in range(self.selectedlength):
+                        results = executor.submit(self.makeLocalPicon, self.selected, i)
+                        results.add_done_callback(self.log_result)
+
+            except Exception as e:
+                print(e)
+
+        elif hasMultiprocessing:
+            try:
+                print("*** trying multiprocessing ThreadPool 1 ***")
+                from multiprocessing.pool import ThreadPool
+                pool = ThreadPool(20)
+
+                if cfg.source.value != 'Local':
+                    for i in range(self.selectedlength):
+                        pool.apply_async(self.fetch_url, args=(self.selected, i), callback=self.log_result)
+                    pool.close()
+                else:
+                    for i in range(self.selectedlength):
+                        pool.apply_async(self.makeLocalPicon, args=(self.selected, i), callback=self.log_result)
+                    pool.close()
+
+            except Exception as e:
+                print(e)
 
     def finished(self):
         self.session.openWithCallback(self.done, MessageBox, 'Finished.\n\nRestart your GUI if downloaded to picons folder.\n\nYour created picons can be found in \n' + str(cfg.downloadlocation.value) + '\n\nUse E-Channelizer to correctly assign your picons to your channels.', MessageBox.TYPE_INFO, timeout=30)
@@ -166,7 +189,7 @@ class E2Piconizer_DownloadPicons(Screen):
     def done(self, answer=None):
         self.close()
 
-    def makeLocalPicon(self, lfile, i):
+    def makeLocalPicon(self, lfile, i=None):
         image_file = lfile[i][3]
         piconname = lfile[i][0]
 

@@ -6,7 +6,7 @@ from . import buildgfx
 from . import selectpicons
 from . import E2Globals
 
-from .plugin import skin_path, cfg, testpicons_directory
+from .plugin import skin_path, cfg, testpicons_directory, pythonFull
 from Components.ActionMap import NumberActionMap
 from Components.config import config, getConfigListEntry, configfile
 from Components.ConfigList import ConfigListScreen
@@ -17,6 +17,7 @@ from enigma import getDesktop, ePoint
 from Screens.LocationBox import LocationBox
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
+from Screens.Console import Console
 
 import os
 import sys
@@ -82,13 +83,19 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
         dependencies = True
 
         try:
-            from multiprocessing.pool import ThreadPool
+            import requests
             from PIL import Image
-        except:
+            print("***** python version *** %s" % pythonFull)
+            if pythonFull < 3.9:
+                print("*** checking multiprocessing ***")
+                from multiprocessing.pool import ThreadPool
+        except Exception as e:
+            print("**** missing dependencies ***")
+            print(e)
             dependencies = False
 
         if dependencies is False:
-            chmod("/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh", 0o0755)
+            os.chmod("/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh", 0o0755)
             cmd1 = ". /usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh"
             self.session.openWithCallback(self.initConfig, Console, title="Checking Python Dependencies", cmdlist=[cmd1], closeOnSuccess=False)
         else:

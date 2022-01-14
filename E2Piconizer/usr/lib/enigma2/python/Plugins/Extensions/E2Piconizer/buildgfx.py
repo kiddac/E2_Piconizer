@@ -152,7 +152,6 @@ def blendBackground(im, bg, background, reflection, offsety):
 
     bg_alpha = ImageChops.screen(bg_alpha, temp)
 
-    
     if reflection:
         bg.paste(im, ((bgwidth - imagew) // 2, (bgheight - imageh) // 2 + int(offsety)), im)
     else:
@@ -160,7 +159,7 @@ def blendBackground(im, bg, background, reflection, offsety):
 
     bg.putalpha(bg_alpha)
 
-    #bg.paste(im, ((bgwidth - imagew) // 2, (bgheight - imageh) // 2))
+    # bg.paste(im, ((bgwidth - imagew) // 2, (bgheight - imageh) // 2))
 
     return bg
 

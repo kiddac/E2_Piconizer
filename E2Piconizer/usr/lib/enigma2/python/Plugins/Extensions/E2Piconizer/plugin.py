@@ -6,11 +6,35 @@ from . import _
 from Components.config import config, ConfigSelection, ConfigSubsection, ConfigYesNo, ConfigSelectionNumber, ConfigDirectory
 from enigma import getDesktop
 from Plugins.Plugin import PluginDescriptor
-import os
 
+import twisted.python.runtime
+
+import os
+import sys
+
+try:
+    from multiprocessing.pool import ThreadPool
+    hasMultiprocessing = True
+except:
+    hasMultiprocessing = False
+
+try:
+    from concurrent.futures import ThreadPoolExecutor
+    if twisted.python.runtime.platform.supportsThreads():
+        hasConcurrent = True
+    else:
+        hasConcurrent = False
+except:
+    hasConcurrent = False
 
 screenwidth = getDesktop(0).size()
 
+pythonFull = float(str(sys.version_info.major) + "." + str(sys.version_info.minor))
+pythonVer = sys.version_info.major
+
+isDreambox = False
+if os.path.exists("/usr/bin/apt-get"):
+    isDreambox = True
 
 if screenwidth.width() > 1280:
     skin_directory = '/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/fhd/'
