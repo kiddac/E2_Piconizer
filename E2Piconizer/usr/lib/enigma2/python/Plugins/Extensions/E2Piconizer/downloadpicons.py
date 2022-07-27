@@ -83,6 +83,7 @@ class E2Piconizer_DownloadPicons(Screen):
         self.job_total = len(self.selected)
         self.picon_num = 0
         self.pause = 100
+        self.complete = False
 
         self.onFirstExecBegin.append(self.start)
 
@@ -106,11 +107,10 @@ class E2Piconizer_DownloadPicons(Screen):
         imgRequest = Request(url[i][3], headers=hdr)
 
         try:
-            response = urlopen(imgRequest)
+            response = urlopen(imgRequest, timeout=10)
         except Exception as e:
             print(e)
             response = ""
-            pass
 
         if response != "":
 
@@ -129,33 +129,39 @@ class E2Piconizer_DownloadPicons(Screen):
             self.timer3.callback.append(self.makePicon(image_file, piconname))
 
     def log_result(self, result=None):
-        self['action'].setText(_('Making Funky Picons'))
         self.progresscurrent += 1
+        self['action'].setText(_('Making Funky Picons'))
         self['progress'].setValue(self.progresscurrent)
         self['status'].setText('Picon %d of %d' % (self.progresscurrent, self.job_total))
-
-        if self.progresscurrent == self.selectedlength:
+        if self.progresscurrent == self.job_total - 1 or self.progresscurrent == self.job_total:
             self.timer3 = eTimer()
             self.timer3.start(3000, 1)
             self.timer3.timeout.get().append(self.finished())
 
     def buildPicons(self):
-        self.selectedlength = len(self.selected)
 
         if hasConcurrent:
             print("******* trying concurrent futures 1 ******")
             try:
                 from concurrent.futures import ThreadPoolExecutor
-                executor = ThreadPoolExecutor(max_workers=20)
+                executor = ThreadPoolExecutor(max_workers=30)
 
                 if cfg.source.value != 'Local':
-                    for i in range(self.selectedlength):
-                        results = executor.submit(self.fetch_url, self.selected, i)
-                        results.add_done_callback(self.log_result)
+                    for i in range(self.job_total):
+                        piconname = self.selected[i]
+                        print("*** piconname ", i, piconname)
+                        try:
+                            results = executor.submit(self.fetch_url, self.selected, i)
+                            results.add_done_callback(self.log_result)
+                        except Exception as e:
+                            print("********** ERROR ", e)
                 else:
-                    for i in range(self.selectedlength):
-                        results = executor.submit(self.makeLocalPicon, self.selected, i)
-                        results.add_done_callback(self.log_result)
+                    for i in range(self.job_total):
+                        try:
+                            results = executor.submit(self.makeLocalPicon, self.selected, i)
+                            results.add_done_callback(self.log_result)
+                        except Exception as e:
+                            print("********** ERROR ", e)
 
             except Exception as e:
                 print(e)
@@ -164,22 +170,25 @@ class E2Piconizer_DownloadPicons(Screen):
             try:
                 print("*** trying multiprocessing ThreadPool 1 ***")
                 from multiprocessing.pool import ThreadPool
-                pool = ThreadPool(20)
+                pool = ThreadPool(30)
 
                 if cfg.source.value != 'Local':
-                    for i in range(self.selectedlength):
+                    for i in range(self.job_total):
+                        piconname = self.selected[i]
+                        print("*** piconname ", i, piconname)
                         pool.apply_async(self.fetch_url, args=(self.selected, i), callback=self.log_result)
-                    pool.close()
                 else:
-                    for i in range(self.selectedlength):
+                    for i in range(self.job_total):
                         pool.apply_async(self.makeLocalPicon, args=(self.selected, i), callback=self.log_result)
-                    pool.close()
+                pool.close()
 
             except Exception as e:
                 print(e)
 
     def finished(self):
-        self.session.openWithCallback(self.done, MessageBox, 'Finished.\n\nRestart your GUI if downloaded to picons folder.\n\nYour created picons can be found in \n' + str(cfg.downloadlocation.value) + '\n\nUse E-Channelizer to correctly assign your picons to your channels.', MessageBox.TYPE_INFO, timeout=30)
+        if self.complete is False:
+            self.session.openWithCallback(self.done, MessageBox, 'Finished.\n\nRestart your GUI if downloaded to picons folder.\n\nYour created picons can be found in \n' + str(cfg.downloadlocation.value) + '\n\nUse E-Channelizer to correctly assign your picons to your channels.', MessageBox.TYPE_INFO, timeout=30)
+            self.complete = True
 
     def showError(self, message):
         question = self.session.open(MessageBox, message, MessageBox.TYPE_ERROR)

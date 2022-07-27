@@ -212,8 +212,8 @@ class E2Piconizer_SelectPicons(Screen):
 
         if cfg.source.value == 'Sky UK':
             self.urls = []
-            self.urls.append('http://awk.epgsky.com/hawk/linear/services/4101/1')  # uk london hd
-            self.urls.append('http://awk.epgsky.com/hawk/linear/services/4104/50')  # ireland
+            self.urls.append('https://awk.epgsky.com/hawk/linear/services/4101/1')  # uk london hd
+            self.urls.append('https://awk.epgsky.com/hawk/linear/services/4104/50')  # ireland
 
             self.base = 'services'
             self.ptitle = 't'
@@ -331,9 +331,12 @@ class E2Piconizer_SelectPicons(Screen):
             for ch2 in channels_json[1]:
                 exists = False
                 for ch1 in channels_json[0]:
-                    if ch2[self.ptitle] == ch1[self.ptitle]:
-                        exists = True
-                        break
+                    try:
+                        if ch2[self.ptitle] == ch1[self.ptitle]:
+                            exists = True
+                            break
+                    except:
+                        pass
                 if exists is False:
                     channels_all.append(ch2)
 
@@ -362,21 +365,27 @@ class E2Piconizer_SelectPicons(Screen):
             picon_values = {}
 
             if self.webapi == 'awk':
-                picon_values['sid'] = channel[self.sid]
-                picon_values['title'] = channel[self.ptitle]
-                picon_values['picon_url'] = self.piconurl + str(picon_values['sid']) + '.png'
-                picon_values['status'] = False
+                try:
+                    picon_values['sid'] = channel[self.sid]
+                    picon_values['title'] = channel[self.ptitle]
+                    picon_values['picon_url'] = self.piconurl + str(picon_values['sid']) + '.png'
+                    picon_values['status'] = False
+                except:
+                    continue
 
             if self.webapi == 'horizon':
-                picon_values['sid'] = ''
-                picon_values['title'] = channel['stationSchedules'][0]['station'][self.ptitle]
-                picon_values['picon_url'] = ''
-                picon_values['status'] = False
-                for image in channel['stationSchedules'][0]['station']['images']:
+                try:
+                    picon_values['sid'] = ''
+                    picon_values['title'] = channel['stationSchedules'][0]['station'][self.ptitle]
+                    picon_values['picon_url'] = ''
+                    picon_values['status'] = False
+                    for image in channel['stationSchedules'][0]['station']['images']:
 
-                    if image['assetType'] == 'station-logo-large':
-                        picon_values['picon_url'] = image['url'].split('?', 1)[0]
-                        break
+                        if image['assetType'] == 'station-logo-large':
+                            picon_values['picon_url'] = image['url'].split('?', 1)[0]
+                            break
+                except:
+                    continue
 
             picon_values['selected'] = True
             self.picon_list.append(picon_values)
