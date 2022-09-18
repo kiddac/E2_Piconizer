@@ -11,6 +11,7 @@ import twisted.python.runtime
 
 import os
 import sys
+import shutil
 
 try:
     from multiprocessing.pool import ThreadPool
@@ -35,6 +36,12 @@ pythonVer = sys.version_info.major
 isDreambox = False
 if os.path.exists("/usr/bin/apt-get"):
     isDreambox = True
+
+if os.path.isdir('/usr/lib/enigma2/python/Plugins/Extensions/XStreamityPro/'):
+    try:
+        shutil.rmtree('/usr/lib/enigma2/python/Plugins/Extensions/XStreamityPro/')
+    except:
+        pass
 
 if screenwidth.width() > 1280:
     skin_directory = '/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/fhd/'
