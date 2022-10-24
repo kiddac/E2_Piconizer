@@ -179,15 +179,15 @@ cfg.transparency = ConfigSelection(default='80', choices=TransparencyList)
 cfg.graphic = ConfigSelection(default='default.png', choices=graphics)
 
 cfg.reflection = ConfigYesNo(default=False)
-cfg.reflectionsize = ConfigSelectionNumber(10, 100, 10, default=50)
-cfg.reflectionstrength = ConfigSelectionNumber(1, 3, 1, default=1)
-cfg.offsety = ConfigSelectionNumber(-50, 50, 2, default=0)
+cfg.reflectionsize = ConfigSelectionNumber(10, 100, 10, default=50, wraparound=True)
+cfg.reflectionstrength = ConfigSelectionNumber(1, 3, 1, default=1, wraparound=True)
+cfg.offsety = ConfigSelectionNumber(-50, 50, 2, default=0, wraparound=True)
 
 cfg.glass = ConfigYesNo(default=False)
 cfg.glassgfx = ConfigSelection(default='mirror-glass.png', choices=glass)
 
-cfg.padding = ConfigSelectionNumber(0, 50, 2, default=0)
-cfg.rounded = ConfigSelectionNumber(0, 50, 2, default=0)
+cfg.padding = ConfigSelectionNumber(0, 50, 2, default=0, wraparound=True)
+cfg.rounded = ConfigSelectionNumber(0, 50, 2, default=0, wraparound=True)
 
 cfg.downloadlocation = ConfigDirectory(default='/etc/enigma2/E2Piconizer/downloads/')
 cfg.locallocation = ConfigDirectory(default='/etc/enigma2/E2Piconizer/local_source/')
