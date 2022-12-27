@@ -4,6 +4,7 @@
 from .plugin import graphic_directory, glass_directory
 from PIL import Image, ImageOps, ImageDraw, ImageChops, ImageFile, PngImagePlugin
 import re
+import sys
 
 
 _simple_palette = re.compile(b"^\xff*\x00\xff*$")
@@ -61,7 +62,10 @@ def addColour(piconSize, colour, transparency):
 def addGraphic(piconSize, background):
     width, height = piconSize
     bg = Image.open(graphic_directory + background).convert('RGBA')
-    bg = bg.resize((width, height), Image.ANTIALIAS)
+    try:
+        bg = bg.resize((width, height), Image.Resampling.LANCZOS)
+    except:
+        bg = bg.resize((width, height), Image.ANTIALIAS)
     return bg
 
 
@@ -81,7 +85,10 @@ def createPreview(picon, piconSize, padding):
 
     imagew, imageh = im.size
     if imagew > pwidth or imageh > pheight:
-        im.thumbnail(thumbsize, Image.ANTIALIAS)
+        try:
+            im.thumbnail(thumbsize, Image.Resampling.LANCZOS)
+        except:
+            im.thumbnail(thumbsize, Image.ANTIALIAS)
 
     return im
 
@@ -122,7 +129,10 @@ def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflec
         mask = Image.open('/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/icons/reflection-mask-3.png')
 
     if mask != "":
-        mask = mask.resize((ref.size[0], ref.size[1]), Image.ANTIALIAS)
+        try:
+            mask = mask.resize((ref.size[0], ref.size[1]), Image.Resampling.LANCZOS)
+        except:
+            mask = mask.resize((ref.size[0], ref.size[1]), Image.ANTIALIAS)
 
         ref_alpha = ref.convert('RGBA').split()[-1]
         ref_alpha = ImageChops.darker(mask, ref_alpha)
@@ -133,7 +143,10 @@ def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflec
     combined.paste(ref, (0, imageh), ref)
     combinedw, combinedh = combined.size
     if combinedw > pwidth or combinedh > pheight:
-        combined.thumbnail(thumbsize, Image.ANTIALIAS)
+        try:
+            combined.thumbnail(thumbsize, Image.Resampling.LANCZOS)
+        except:
+            combined.thumbnail(thumbsize, Image.ANTIALIAS)
     return combined
 
 
@@ -159,15 +172,16 @@ def blendBackground(im, bg, background, reflection, offsety):
 
     bg.putalpha(bg_alpha)
 
-    # bg.paste(im, ((bgwidth - imagew) // 2, (bgheight - imageh) // 2))
-
     return bg
 
 
 def addGlass(piconSize, im, bg):
     width, height = piconSize
     im = Image.open(glass_directory + im).convert('RGBA')
-    im = im.resize((width, height), Image.ANTIALIAS)
+    try:
+        im = im.resize((width, height), Image.Resampling.LANCZOS)
+    except:
+        im = im.resize((width, height), Image.ANTIALIAS)
 
     imagew, imageh = im.size
     im_alpha = im.convert('RGBA').split()[-1]
@@ -195,7 +209,10 @@ def addCorners(im, radius):
     draw = ImageDraw.Draw(circle)
     draw.ellipse((0, 0, radius * 2 * n, radius * 2 * n), fill=255)
     alpha = Image.new('L', im.size, 255)
-    circle = circle.resize((radius * 2, radius * 2), Image.ANTIALIAS)
+    try:
+        circle = circle.resize((radius * 2, radius * 2), Image.Resampling.LANCZOS)
+    except:
+        circle = circle.resize((radius * 2, radius * 2), Image.ANTIALIAS)
 
     alpha.paste(circle.crop((0, 0, radius, radius)), (0, 0))
     alpha.paste(circle.crop((0, radius, radius, radius * 2)), (0, h - radius))
