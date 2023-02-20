@@ -274,13 +274,13 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
         bg = buildgfx.createEmptyImage(piconSize)
 
         if screenwidth.width() > 1280:
-            E2Globals.offsetx = max(0, (400 - piconSize[0]) // 2)
-            E2Globals.offsety = max(0, (240 - piconSize[1]) // 2)
+            E2Globals.offsetx = int(max(0, (400 - piconSize[0]) // 2))
+            E2Globals.offsety = int(max(0, (240 - piconSize[1]) // 2))
             E2Globals.piconx = 30
             E2Globals.picony = 519
         else:
-            E2Globals.offsetx = max(0, (220 - piconSize[0]) // 2)
-            E2Globals.offsety = max(0, (132 - piconSize[1]) // 2)
+            E2Globals.offsetx = int(max(0, (220 - piconSize[0]) // 2))
+            E2Globals.offsety = int(max(0, (132 - piconSize[1]) // 2))
             E2Globals.piconx = 42
             E2Globals.picony = 360
 
@@ -291,16 +291,16 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
             bg = buildgfx.addGraphic(piconSize, cfg.graphic.value)
 
         if cfg.reflection.value:
-            im = buildgfx.createReflectedPreview(testpicons_directory + self.testpicon, piconSize, cfg.padding.value, cfg.reflectionstrength.value, cfg.reflectionsize.value)
+            im = buildgfx.createReflectedPreview(testpicons_directory + self.testpicon, piconSize, int(cfg.padding.value), int(cfg.reflectionstrength.value), int(cfg.reflectionsize.value))
         else:
-            im = buildgfx.createPreview(testpicons_directory + self.testpicon, piconSize, cfg.padding.value)
+            im = buildgfx.createPreview(testpicons_directory + self.testpicon, piconSize, int(cfg.padding.value))
 
-        im = buildgfx.blendBackground(im, bg, cfg.background.value, cfg.reflection.value, cfg.offsety.value)
+        im = buildgfx.blendBackground(im, bg, cfg.background.value, cfg.reflection.value, int(cfg.offsety.value))
 
         if cfg.background.value != 'transparent' and cfg.glass.value:
             im = buildgfx.addGlass(piconSize, cfg.glassgfx.value, im)
 
-        im = buildgfx.addCorners(im, cfg.rounded.value)
+        im = buildgfx.addCorners(im, int(cfg.rounded.value))
 
         self.savePicon(im)
         self.showPicon()

@@ -227,26 +227,26 @@ class E2Piconizer_DownloadPicons(Screen):
         if filename:
             if cfg.reflection.value:
                 try:
-                    im = buildgfx.createReflectedPreview(filename, piconSize, cfg.padding.value, cfg.reflectionstrength.value, cfg.reflectionsize.value)
+                    im = buildgfx.createReflectedPreview(filename, piconSize, int(cfg.padding.value), int(cfg.reflectionstrength.value), int(cfg.reflectionsize.value))
                 except:
                     im = buildgfx.createEmptyImage(piconSize)
                     pass
             else:
                 try:
-                    im = buildgfx.createPreview(filename, piconSize, cfg.padding.value)
+                    im = buildgfx.createPreview(filename, piconSize, int(cfg.padding.value))
                 except:
                     im = buildgfx.createEmptyImage(piconSize)
                     pass
         else:
             im = buildgfx.createEmptyImage(piconSize)
 
-        im = buildgfx.blendBackground(im, bg, cfg.background.value, cfg.reflection.value, cfg.offsety.value)
+        im = buildgfx.blendBackground(im, bg, cfg.background.value, cfg.reflection.value, int(cfg.offsety.value))
 
         if cfg.background.value != 'transparent' and cfg.glass.value:
             im = buildgfx.addGlass(piconSize, cfg.glassgfx.value, im)
 
-        if cfg.rounded != 0:
-            im = buildgfx.addCorners(im, cfg.rounded.value)
+        if int(cfg.rounded.value) != 0:
+            im = buildgfx.addCorners(im, int(cfg.rounded.value))
 
         self.timer1 = eTimer()
         self.timer1.start(self.pause, 1)

@@ -514,19 +514,19 @@ class E2Piconizer_SelectPicons(Screen):
 
         if self.temp:
             if cfg.reflection.value:
-                im = buildgfx.createReflectedPreview(self.temp, piconSize, cfg.padding.value, cfg.reflectionstrength.value, cfg.reflectionsize.value)
+                im = buildgfx.createReflectedPreview(self.temp, piconSize, int(cfg.padding.value), int(cfg.reflectionstrength.value), int(cfg.reflectionsize.value))
             else:
-                im = buildgfx.createPreview(self.temp, piconSize, cfg.padding.value)
+                im = buildgfx.createPreview(self.temp, piconSize, int(cfg.padding.value))
         else:
             im = bg
 
-        im = buildgfx.blendBackground(im, bg, cfg.background.value, cfg.reflection.value, cfg.offsety.value)
+        im = buildgfx.blendBackground(im, bg, cfg.background.value, cfg.reflection.value, int(cfg.offsety.value))
 
         if cfg.background.value != 'transparent' and cfg.glass.value:
             im = buildgfx.addGlass(piconSize, cfg.glassgfx.value, im)
 
-        if cfg.rounded != 0:
-            im = buildgfx.addCorners(im, cfg.rounded.value)
+        if int(cfg.rounded.value) != 0:
+            im = buildgfx.addCorners(im, int(cfg.rounded.value))
 
         self.savePicon(im)
 
