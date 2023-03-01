@@ -15,7 +15,6 @@
         <widget name="trimmarks" position="19,508" size="422,262" alphatest="blend" transparent="1" />
         <widget name="preview" position="30,519" size="400,240" alphatest="blend" transparent="1" />
 
-
         <widget source="global.CurrentTime" render="Label" position="0,1020" size="460,60" font="Regular;30" foregroundColor="#00aeef" backgroundColor="#15263d" valign="center" halign="center" transparent="1" >
                 <convert type="ClockToText">Format:%A, %b %d, %H.%M</convert>
         </widget>

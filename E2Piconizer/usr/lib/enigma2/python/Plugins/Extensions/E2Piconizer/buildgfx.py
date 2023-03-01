@@ -45,7 +45,7 @@ if pythonVer != 2:
 
 def createEmptyImage(piconSize):
     width, height = piconSize
-    bg = Image.new('RGBA', (width, height), (255, 255, 255, 0))
+    bg = Image.new("RGBA", (width, height), (255, 255, 255, 0))
     return bg
 
 
@@ -54,14 +54,14 @@ def addColour(piconSize, colour, transparency):
     h = colour
     r, g, b = tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
     a = int(transparency, 16)
-    bg = Image.new('RGBA', (width, height), (r, g, b, a))
-    bg.save('/tmp/preview.png', "PNG")
+    bg = Image.new("RGBA", (width, height), (r, g, b, a))
+    bg.save("/tmp/preview.png", "PNG")
     return bg
 
 
 def addGraphic(piconSize, background):
     width, height = piconSize
-    bg = Image.open(graphic_directory + background).convert('RGBA')
+    bg = Image.open(graphic_directory + background).convert("RGBA")
     try:
         bg = bg.resize((width, height), Image.Resampling.LANCZOS)
     except:
@@ -80,7 +80,7 @@ def createPreview(picon, piconSize, padding):
     thumbsize = [int(pwidth), int(pheight)]
 
     im = Image.open(picon)
-    im = im.convert('RGBA')
+    im = im.convert("RGBA")
     im = autocrop_image(im)
 
     imagew, imageh = im.size
@@ -105,7 +105,7 @@ def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflec
     thumbsize = [int(pwidth), int(pheight)]
 
     im = Image.open(picon)
-    im = im.convert('RGBA')
+    im = im.convert("RGBA")
     im = autocrop_image(im)
     imagew, imageh = im.size
 
@@ -122,11 +122,11 @@ def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflec
     mask = ""
 
     if reflectionstrength == 1:
-        mask = Image.open('/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/icons/reflection-mask-1.png')
+        mask = Image.open("/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/icons/reflection-mask-1.png")
     if reflectionstrength == 2:
-        mask = Image.open('/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/icons/reflection-mask-2.png')
+        mask = Image.open("/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/icons/reflection-mask-2.png")
     if reflectionstrength == 3:
-        mask = Image.open('/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/icons/reflection-mask-3.png')
+        mask = Image.open("/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/icons/reflection-mask-3.png")
 
     if mask != "":
         try:
@@ -134,11 +134,11 @@ def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflec
         except:
             mask = mask.resize((ref.size[0], ref.size[1]), Image.ANTIALIAS)
 
-        ref_alpha = ref.convert('RGBA').split()[-1]
+        ref_alpha = ref.convert("RGBA").split()[-1]
         ref_alpha = ImageChops.darker(mask, ref_alpha)
         ref.putalpha(ref_alpha)
 
-    combined = Image.new('RGBA', (imagew, imageh + int(imageh * mirrorheight)), (0, 0, 0, 0))
+    combined = Image.new("RGBA", (imagew, imageh + int(imageh * mirrorheight)), (0, 0, 0, 0))
     combined.paste(im, (0, 0), im)
     combined.paste(ref, (0, imageh), ref)
     combinedw, combinedh = combined.size
@@ -152,12 +152,12 @@ def createReflectedPreview(picon, piconSize, padding, reflectionstrength, reflec
 
 def blendBackground(im, bg, background, reflection, offsety):
     imagew, imageh = im.size
-    im_alpha = im.convert('RGBA').split()[-1]
+    im_alpha = im.convert("RGBA").split()[-1]
 
     bgwidth, bgheight = bg.size
-    bg_alpha = bg.convert('RGBA').split()[-1]
+    bg_alpha = bg.convert("RGBA").split()[-1]
 
-    temp = Image.new('L', (bgwidth, bgheight), 0)
+    temp = Image.new("L", (bgwidth, bgheight), 0)
     if reflection:
         temp.paste(im_alpha, ((bgwidth - imagew) // 2, (bgheight - imageh) // 2 + int(offsety)), im_alpha)
     else:
@@ -177,19 +177,19 @@ def blendBackground(im, bg, background, reflection, offsety):
 
 def addGlass(piconSize, im, bg):
     width, height = piconSize
-    im = Image.open(glass_directory + im).convert('RGBA')
+    im = Image.open(glass_directory + im).convert("RGBA")
     try:
         im = im.resize((width, height), Image.Resampling.LANCZOS)
     except:
         im = im.resize((width, height), Image.ANTIALIAS)
 
     imagew, imageh = im.size
-    im_alpha = im.convert('RGBA').split()[-1]
+    im_alpha = im.convert("RGBA").split()[-1]
 
     bgwidth, bgheight = bg.size
-    bg_alpha = bg.convert('RGBA').split()[-1]
+    bg_alpha = bg.convert("RGBA").split()[-1]
 
-    temp = Image.new('L', (bgwidth, bgheight), 0)
+    temp = Image.new("L", (bgwidth, bgheight), 0)
     temp.paste(im_alpha, (0, 0), im_alpha)
 
     bg_alpha = ImageChops.screen(bg_alpha, temp)
@@ -205,10 +205,10 @@ def addCorners(im, radius):
     if radius > h / 2:
         radius = int(h / 2)
 
-    circle = Image.new('L', (radius * 2 * n, radius * 2 * n), 0)
+    circle = Image.new("L", (radius * 2 * n, radius * 2 * n), 0)
     draw = ImageDraw.Draw(circle)
     draw.ellipse((0, 0, radius * 2 * n, radius * 2 * n), fill=255)
-    alpha = Image.new('L', im.size, 255)
+    alpha = Image.new("L", im.size, 255)
     try:
         circle = circle.resize((radius * 2, radius * 2), Image.Resampling.LANCZOS)
     except:
@@ -219,8 +219,8 @@ def addCorners(im, radius):
     alpha.paste(circle.crop((radius, 0, radius * 2, radius)), (w - radius, 0))
     alpha.paste(circle.crop((radius, radius, radius * 2, radius * 2)), (w - radius, h - radius))
 
-    if im.mode in ('RGBA', 'LA') or (im.mode == 'P' and 'transparency' in im.info):
-        bg_alpha = im.convert('RGBA').split()[-1]
+    if im.mode in ("RGBA", "LA") or (im.mode == "P" and "transparency" in im.info):
+        bg_alpha = im.convert("RGBA").split()[-1]
         alpha = ImageChops.darker(alpha, bg_alpha)
 
     im.putalpha(alpha)

@@ -28,8 +28,6 @@ try:
 except:
     hasConcurrent = False
 
-screenwidth = getDesktop(0).size()
-
 pythonFull = float(str(sys.version_info.major) + "." + str(sys.version_info.minor))
 pythonVer = sys.version_info.major
 
@@ -37,60 +35,51 @@ isDreambox = False
 if os.path.exists("/usr/bin/apt-get"):
     isDreambox = True
 
-if os.path.isdir('/usr/lib/enigma2/python/Plugins/Extensions/XStreamityPro/'):
-    try:
-        shutil.rmtree('/usr/lib/enigma2/python/Plugins/Extensions/XStreamityPro/')
-    except:
-        pass
+screenwidth = getDesktop(0).size()
 
 if screenwidth.width() > 1280:
-    skin_directory = '/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/fhd/'
+    skin_directory = "/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/fhd/"
 else:
-    skin_directory = '/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/hd/'
+    skin_directory = "/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/hd/"
 
-skin_path = skin_directory + 'default/'
-graphic_directory = '/etc/enigma2/E2Piconizer/backgrounds/'
+skin_path = os.path.join(skin_directory, "default/")
+
+graphic_directory = "/etc/enigma2/E2Piconizer/backgrounds/"
 graphics = os.listdir(graphic_directory)
 
-glass_directory = '/etc/enigma2/E2Piconizer/glass/'
+glass_directory = "/etc/enigma2/E2Piconizer/glass/"
 glass = os.listdir(glass_directory)
 
-testpicons_directory = '/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/testpicons/'
+testpicons_directory = "/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/testpicons/"
 testpicons = os.listdir(testpicons_directory)
 
-tempdirectory = '/var/volatile/tmp/tempdownload'
+tempdirectory = "/var/volatile/tmp/tempdownload"
 
-hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
+hdr = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
+}
 
 SourceList = [
-    ('Sky UK', 'Sky UK/IE'),
-    ('Virgin UK', 'Virgin UK/IE'),
-    ('Horizon AT', _('Horizon TV (AT) - Austrian / German')),
-    ('Horizon CH', _('Horizon TV (CH) - Swiss / German / French / Italian')),
-    ('Horizon CZ', _('Horizon TV (CZ) - Czech')),
-    ('Horizon DE', _('Horizon TV (DE) - German')),
-    ('Horizon HU', _('Horizon TV (HU) - Hungarian')),
-    ('Horizon NL', _('Horizon TV (NL) - Dutch')),
-    ('Horizon PL', _('Horizon TV (PL) - Polish')),
-    ('Horizon RO', _('Horizon TV (RO) - Romanian')),
-    ('Horizon SK', _('Horizon TV (SK) - Slovakian')),
-    ('Local', _('Local media folder'))]
+    ("Sky UK", "Sky UK/IE"),
+    # ("Virgin UK", "Virgin UK"),
+    # ("Horizon SK", _("Horizon TV (SK) - Slovakian")),
+    ("Local", _("Local media folder"))]
 
 SizeList = [
-    ('minipicons', _('MiniPicons - 50x30 Pixel')),
-    ('picons', _('Picons - 100x60 Pixel')),
-    ('xpicons', _('XPicons - 220x132 Pixel')),
-    ('zpicons', _('ZPicons - 220x88 Pixel (Display Duo2)')),
-    ('zzpicons1', _('ZZPicons1 - 400x160 bzw')),
-    ('zzpicons2', _('ZZPicons2 - 400x170 Pixel')),
-    ('zzzpicons', _('ZZZPicons - 400x240 Pixel'))]
+    ("minipicons", _("MiniPicons - 50x30 Pixel")),
+    ("picons", _("Picons - 100x60 Pixel")),
+    ("xpicons", _("XPicons - 220x132 Pixel")),
+    ("zpicons", _("ZPicons - 220x88 Pixel (Display Duo2)")),
+    ("zzpicons1", _("ZZPicons1 - 400x160 bzw")),
+    ("zzpicons2", _("ZZPicons2 - 400x170 Pixel")),
+    ("zzzpicons", _("ZZZPicons - 400x240 Pixel"))]
 
 if screenwidth.width() <= 1280:
     SizeList = [
-        ('minipicons', _('MiniPicons - 50x30 Pixel')),
-        ('picons', _('Picons - 100x60 Pixel')),
-        ('xpicons', _('XPicons - 220x132 Pixel')),
-        ('zpicons', _('ZPicons - 220x88 Pixel (Display Duo2)'))]
+        ("minipicons", _("MiniPicons - 50x30 Pixel")),
+        ("picons", _("Picons - 100x60 Pixel")),
+        ("xpicons", _("XPicons - 220x132 Pixel")),
+        ("zpicons", _("ZPicons - 220x88 Pixel (Display Duo2)"))]
 
 
 ColourList = [
@@ -168,15 +157,15 @@ TransparencyList = [
 config.plugins.E2Piconizer = ConfigSubsection()
 cfg = config.plugins.E2Piconizer
 
-cfg.source = ConfigSelection(default='Sky UK', choices=SourceList)
-cfg.size = ConfigSelection(default='xpicons', choices=SizeList)
-cfg.testpicon = ConfigSelection(default='picon1.png', choices=testpicons)
-cfg.quality = ConfigSelection(default='normal', choices=[('normal', _('Normal')), ('large', _('Large (slower)')), ('maximum', _('Maximum (slow)'))])
-cfg.background = ConfigSelection(default='transparent', choices=[('transparent', _('Transparent')), ('colour', _('Colour')), ('graphic', _('Graphic'))])
+cfg.source = ConfigSelection(default="Sky UK", choices=SourceList)
+cfg.size = ConfigSelection(default="xpicons", choices=SizeList)
+cfg.testpicon = ConfigSelection(default="picon1.png", choices=testpicons)
+cfg.quality = ConfigSelection(default="normal", choices=[("normal", _("Normal")), ("large", _("Large (slower)")), ("maximum", _("Maximum (slow)"))])
+cfg.background = ConfigSelection(default="transparent", choices=[("transparent", _("Transparent")), ("colour", _("Colour")), ("graphic", _("Graphic"))])
 
-cfg.colour = ConfigSelection(default='000000', choices=ColourList)
-cfg.transparency = ConfigSelection(default='80', choices=TransparencyList)
-cfg.graphic = ConfigSelection(default='default.png', choices=graphics)
+cfg.colour = ConfigSelection(default="000000", choices=ColourList)
+cfg.transparency = ConfigSelection(default="80", choices=TransparencyList)
+cfg.graphic = ConfigSelection(default="default.png", choices=graphics)
 
 cfg.reflection = ConfigYesNo(default=False)
 cfg.reflectionsize = ConfigSelectionNumber(10, 100, 10, default=50, wraparound=True)
@@ -184,37 +173,45 @@ cfg.reflectionstrength = ConfigSelectionNumber(1, 3, 1, default=1, wraparound=Tr
 cfg.offsety = ConfigSelectionNumber(-50, 50, 2, default=0, wraparound=True)
 
 cfg.glass = ConfigYesNo(default=False)
-cfg.glassgfx = ConfigSelection(default='mirror-glass.png', choices=glass)
+cfg.glassgfx = ConfigSelection(default="mirror-glass.png", choices=glass)
 
 cfg.padding = ConfigSelectionNumber(0, 50, 2, default=0, wraparound=True)
 cfg.rounded = ConfigSelectionNumber(0, 50, 2, default=0, wraparound=True)
 
-cfg.downloadlocation = ConfigDirectory(default='/etc/enigma2/E2Piconizer/downloads/')
-cfg.locallocation = ConfigDirectory(default='/etc/enigma2/E2Piconizer/local_source/')
+cfg.downloadlocation = ConfigDirectory(default="/etc/enigma2/E2Piconizer/downloads/")
+cfg.locallocation = ConfigDirectory(default="/etc/enigma2/E2Piconizer/local_source/")
 
-cfg.bitdepth = ConfigSelection(default='24bit', choices=[('24bit', _('24 bit full colour')), ('8bit', _('8 bit 256 indexed colours'))])
+cfg.bitdepth = ConfigSelection(default="24bit", choices=[("24bit", _("24 bit full colour")), ("8bit", _("8 bit 256 indexed colours"))])
+
+# remove dodgy versions of my plugin
+if os.path.isdir("/usr/lib/enigma2/python/Plugins/Extensions/XStreamityPro/"):
+    try:
+        shutil.rmtree("/usr/lib/enigma2/python/Plugins/Extensions/XStreamityPro/")
+    except:
+        pass
 
 
 def main(session, **kwargs):
     from . import main
     session.open(main.E2Piconizer_Main)
+    return
 
 
 def mainmenu(menuid, **kwargs):
-    if menuid == 'mainmenu':
-        return [(_("E2 Piconizer"), main, 'E2Piconizer', 4)]
+    if menuid == "mainmenu":
+        return [(_("E2 Piconizer"), main, "E2Piconizer", 4)]
     else:
         return []
 
 
 def Plugins(**kwargs):
     # add_skin_font()
-    iconFile = 'icons/e2piconizer.png'
+    iconFile = "icons/e2piconizer.png"
     if screenwidth.width() > 1280:
-        iconFile = 'icons/e2piconizerFHD.png'
+        iconFile = "icons/e2piconizerFHD.png"
 
-    description = _('KiddaC - Picon Downloader / Creator')
-    name = _('E2Piconizer')
+    description = _("KiddaC - Picon Downloader / Creator")
+    name = _("E2Piconizer")
 
     result = [PluginDescriptor(name=name, description=description, where=PluginDescriptor.WHERE_PLUGINMENU, icon=iconFile, fnc=main)]
 
