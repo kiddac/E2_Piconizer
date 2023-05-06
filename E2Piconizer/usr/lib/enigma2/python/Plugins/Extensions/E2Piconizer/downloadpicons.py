@@ -6,21 +6,20 @@ from . import buildgfx
 from . import E2Globals
 
 from .plugin import skin_path, cfg, hdr, hasConcurrent, hasMultiprocessing, pythonVer
-
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ProgressBar import ProgressBar
 from enigma import eTimer
-from PIL import Image, ImageFile, PngImagePlugin
+from PIL import Image
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
-from Tools.BoundFunction import boundFunction
 
 import io
 import os
 import re
 import unicodedata
 import requests
+
 try:
     from http.client import HTTPConnection
     HTTPConnection.debuglevel = 0
@@ -28,47 +27,18 @@ except:
     from httplib import HTTPConnection
     HTTPConnection.debuglevel = 0
 
-requests.packages.urllib3.disable_warnings()
-
-_simple_palette = re.compile(b"^\xff*\x00\xff*$")
-
-
-def mycall(self, cid, pos, length):
-    if cid.decode("ascii") == "tRNS":
-        return self.chunk_TRNS(pos, length)
-    else:
-        return getattr(self, "chunk_" + cid.decode("ascii"))(pos, length)
-
-
-def mychunk_TRNS(self, pos, length):
-    s = ImageFile._safe_read(self.fp, length)
-    if self.im_mode == "P":
-        if _simple_palette.match(s):
-            i = s.find(b"\0")
-            if i >= 0:
-                self.im_info["transparency"] = i
-        else:
-            self.im_info["transparency"] = s
-    elif self.im_mode in ("1", "L", "I"):
-        self.im_info["transparency"] = i16(s)
-    elif self.im_mode == "RGB":
-        self.im_info["transparency"] = i16(s), i16(s, 2), i16(s, 4)
-    return s
-
-
-if pythonVer != 2:
-    PngImagePlugin.ChunkStream.call = mycall
-    PngImagePlugin.PngStream.chunk_TRNS = mychunk_TRNS
+try:
+    requests.packages.urllib3.disable_warnings()
+except:
+    pass
 
 
 class E2Piconizer_DownloadPicons(Screen):
 
     def __init__(self, session, selected):
-        # print("********* downloading ***********")
         Screen.__init__(self, session)
         self.session = session
         self.selected = selected
-
         skin = os.path.join(skin_path, "e2piconizer_progress.xml")
 
         with open(skin, "r") as f:
@@ -91,6 +61,10 @@ class E2Piconizer_DownloadPicons(Screen):
         self.pause = 100
         self.complete = False
         self.onFirstExecBegin.append(self.start)
+
+        os.system("echo 1 > /proc/sys/vm/drop_caches")
+        os.system("echo 2 > /proc/sys/vm/drop_caches")
+        os.system("echo 3 > /proc/sys/vm/drop_caches")
 
     def __layoutFinished(self):
         self.setTitle(self.setup_title)
@@ -120,7 +94,6 @@ class E2Piconizer_DownloadPicons(Screen):
 
     def fetch_url(self, url, i):
         response = ""
-
         response = requests.get(url[i][3], headers=hdr, stream=True, verify=False)
 
         if response.status_code == 200:
@@ -136,18 +109,9 @@ class E2Piconizer_DownloadPicons(Screen):
 
                 piconname = re.sub("[^a-z0-9]", "", piconname.replace("&", "and").replace("+", "plus").replace("*", "star").lower())
 
-                self.timer3 = eTimer()
-                try:
-                    self.timer3_conn = self.timer3.timeout.connect(boundFunction(self.makePicon, image_file, piconname))
-                except:
-                    try:
-                        self.timer3.callback.append(boundFunction(self.makePicon, image_file, piconname))
-                    except:
-                        self.makePicon(image_file, piconname)
-                self.timer3.start(5, True)
+                self.makePicon(image_file, piconname)
 
     def log_result(self, result=None):
-        # print("**** log result ***", result)
         self.progresscurrent += 1
         self["action"].setText(_("Making Funky Picons"))
         self["progress"].setValue(self.progresscurrent)
@@ -165,7 +129,6 @@ class E2Piconizer_DownloadPicons(Screen):
             self.timer3.start(3000, True)
 
     def buildPicons(self):
-
         results = ""
 
         threads = len(self.selected)
@@ -173,7 +136,6 @@ class E2Piconizer_DownloadPicons(Screen):
             threads = 10
 
         if hasConcurrent:
-            print("******* trying concurrent futures 1 ******")
             try:
                 from concurrent.futures import ThreadPoolExecutor
                 executor = ThreadPoolExecutor(max_workers=threads)
@@ -184,21 +146,20 @@ class E2Piconizer_DownloadPicons(Screen):
                             results = executor.submit(self.fetch_url, self.selected, i)
                             results.add_done_callback(self.log_result)
                         except Exception as e:
-                            print("********** ERROR ", e)
+                            print(e)
                 else:
                     for i in range(self.job_total):
                         try:
                             results = executor.submit(self.makeLocalPicon, self.selected, i)
                             results.add_done_callback(self.log_result)
                         except Exception as e:
-                            print("********** ERROR ", e)
+                            print(e)
 
             except Exception as e:
                 print(e)
 
         elif hasMultiprocessing:
             try:
-                print("*** trying multiprocessing ThreadPool 1 ***")
                 from multiprocessing.pool import ThreadPool
                 pool = ThreadPool(threads)
 
@@ -215,7 +176,7 @@ class E2Piconizer_DownloadPicons(Screen):
 
     def finished(self):
         if self.complete is False:
-            self.session.openWithCallback(self.done, MessageBox, "Finished.\n\nRestart your GUI if downloaded to picons folder.\n\nYour created picons can be found in \n" + str(cfg.downloadlocation.value) + "\n\nUse E-Channelizer to correctly assign your picons to your channels.", MessageBox.TYPE_INFO, timeout=30)
+            self.session.openWithCallback(self.done, MessageBox, "Finished.\n\nRestart your GUI if downloaded to picons folder.\n\nYour created picons can be found in \n" + str(cfg.downloadlocation.value), MessageBox.TYPE_INFO, timeout=30)
             self.complete = True
 
     def showError(self, message):
@@ -237,18 +198,9 @@ class E2Piconizer_DownloadPicons(Screen):
 
         piconname = re.sub("[^a-z0-9]", "", piconname.replace("&", "and").replace("+", "plus").replace("*", "star").lower())
 
-        self.timer3 = eTimer()
-        try:
-            self.timer3_conn = self.timer3.timeout.connect(boundFunction(self.makePicon, image_file, piconname))
-        except:
-            try:
-                self.timer3.callback.append(boundFunction(self.makePicon, image_file, piconname))
-            except:
-                self.makePicon(image_file, piconname)
-        self.timer3.start(5, True)
+        self.makePicon(image_file, piconname)
 
-    def makePicon(self, piconfile, piconname):
-        filename = piconfile
+    def makePicon(self, image_file, piconname):
         piconSize = E2Globals.piconSize
         bg = buildgfx.createEmptyImage(piconSize)
 
@@ -258,19 +210,20 @@ class E2Piconizer_DownloadPicons(Screen):
         if cfg.background.value == "graphic":
             bg = buildgfx.addGraphic(piconSize, cfg.graphic.value)
 
-        if filename:
+        if image_file:
             if cfg.reflection.value:
+
                 try:
-                    im = buildgfx.createReflectedPreview(filename, piconSize, int(cfg.padding.value), int(cfg.reflectionstrength.value), int(cfg.reflectionsize.value))
-                except:
+                    im = buildgfx.createReflectedPreview(image_file, piconSize, int(cfg.padding.value), int(cfg.reflectionstrength.value), int(cfg.reflectionsize.value))
+                except Exception as e:
+                    print(e)
                     im = buildgfx.createEmptyImage(piconSize)
-                    pass
             else:
                 try:
-                    im = buildgfx.createPreview(filename, piconSize, int(cfg.padding.value))
-                except:
+                    im = buildgfx.createPreview(image_file, piconSize, int(cfg.padding.value))
+                except Exception as e:
+                    print(e)
                     im = buildgfx.createEmptyImage(piconSize)
-                    pass
         else:
             im = buildgfx.createEmptyImage(piconSize)
 
@@ -282,22 +235,13 @@ class E2Piconizer_DownloadPicons(Screen):
         if int(cfg.rounded.value) != 0:
             im = buildgfx.addCorners(im, int(cfg.rounded.value))
 
-        self.timer1 = eTimer()
-        try:
-            self.timer1_conn = self.timer1.timeout.connect(boundFunction(self.savePicon, im, piconname))
-        except:
-            try:
-                self.timer1.callback.append(boundFunction(self.savePicon, im, piconname))
-            except:
-                self.savePicon(im, piconname)
-        self.timer1.start(5, True)
+        self.savePicon(im, piconname)
 
     def savePicon(self, im, piconname):
         if not os.path.exists(cfg.downloadlocation.value):
             os.makedirs(cfg.downloadlocation.value)
 
         if cfg.bitdepth.value == "8bit":
-
             alpha = im.split()[-1]
             im = im.convert("RGB").convert("P", palette=Image.ADAPTIVE)
             mask = Image.eval(alpha, lambda a: 255 if a <= 128 else 0)

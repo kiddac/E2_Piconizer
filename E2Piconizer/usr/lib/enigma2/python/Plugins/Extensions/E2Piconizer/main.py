@@ -72,12 +72,9 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
         try:
             import requests
             from PIL import Image
-            print("***** python version *** %s" % pythonFull)
             if pythonFull < 3.9:
-                print("*** checking multiprocessing ***")
                 from multiprocessing.pool import ThreadPool
         except Exception as e:
-            print("**** missing dependencies ***")
             print(e)
             dependencies = False
 
@@ -87,6 +84,12 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
             self.session.openWithCallback(self.initConfig, Console, title="Checking Python Dependencies", cmdlist=[cmd1], closeOnSuccess=False)
         else:
             self.initConfig()
+
+    def getCurrentDescription(self):
+        return self["config"].getCurrent() and len(self["config"].getCurrent()) > 2 and self["config"].getCurrent()[2] or ""
+
+    def selectionChanged(self):
+        self["description"].setText(self.getCurrentDescription())
 
     def changedEntry(self):
         self.item = self["config"].getCurrent()
@@ -190,6 +193,8 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
 
         self["config"].list = self.list
         self["config"].l.setList(self.list)
+        self["config"].onSelectionChanged.append(self.selectionChanged)
+        self.selectionChanged()
 
         self.updatePreview(E2Globals.piconSize)
 
@@ -202,7 +207,6 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
         self.session.open(selectpicons.E2Piconizer_SelectPicons)
 
     def ok(self):
-        ConfigListScreen.keyOK(self)
         sel = self["config"].getCurrent()[1]
         if sel and sel == cfg.downloadlocation:
             self.setting = "download"
@@ -211,7 +215,6 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
         if sel and sel == cfg.locallocation:
             self.setting = "local"
             self.openDirectoryBrowser(cfg.locallocation.value)
-
         else:
             pass
 
@@ -224,9 +227,9 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
                 text=_("Choose directory"),
                 currDir=str(path),
                 bookmarks=config.movielist.videodirs,
-                autoAdd=False,
+                autoAdd=True,
                 editDir=True,
-                inhibitDirs=["/bin", "/boot", "/dev", "/home", "/lib", "/proc", "/run", "/sbin", "/sys", "/var"],
+                inhibitDirs=["/bin", "/boot", "/dev", "/etc", "/home", "/lib", "/proc", "/run", "/sbin", "/sys", "/usr", "/var"],
                 minFree=15)
         except Exception as e:
             print("openDirectoryBrowser get failed: ", str(e))
