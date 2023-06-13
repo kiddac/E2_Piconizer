@@ -109,6 +109,7 @@ class E2Piconizer_SelectPicons(Screen):
         if self.urls != []:
             self.getJson()
             self.getHeader()
+            self.getExtra()
         else:
             self.getLocal()
 
@@ -141,8 +142,12 @@ class E2Piconizer_SelectPicons(Screen):
 
     def delayedDownload(self):
         if cfg.source.value != "Local":
-            self.downloadPreview()
-            self.updatePreview(E2Globals.piconSize)
+            if str(self.selection_list[self.currentSelection][0][3]).startswith("http"):
+                self.downloadPreview()
+                self.updatePreview(E2Globals.piconSize)
+            else:
+                self.temp = str(self.selection_list[self.currentSelection][0][3])
+                self.updatePreview(E2Globals.piconSize)
         else:
             self.temp = str(self.selection_list[self.currentSelection][0][3])
             self.updatePreview(E2Globals.piconSize)
@@ -391,6 +396,21 @@ class E2Piconizer_SelectPicons(Screen):
             picon_values["sid"] = ""
             picon_values["title"] = local.split(".")[0]
             picon_values["picon_url"] = cfg.locallocation.value + local
+            picon_values["selected"] = True
+            picon_values["last_modified_timestamp"] = ""
+            picon_values["last_modified_short"] = ""
+            picon_values["index"] = self.index
+            self.final_picon_list.append(picon_values)
+            self.index += 1
+
+    def getExtra(self):
+        extralist = [x for x in os.listdir("/etc/enigma2/E2Piconizer/extra_picons/") if x.endswith(".png")]
+
+        for extra in extralist:
+            picon_values = {}
+            picon_values["sid"] = ""
+            picon_values["title"] = extra.split(".")[0]
+            picon_values["picon_url"] = os.path.join("/etc/enigma2/E2Piconizer/extra_picons", extra)
             picon_values["selected"] = True
             picon_values["last_modified_timestamp"] = ""
             picon_values["last_modified_short"] = ""

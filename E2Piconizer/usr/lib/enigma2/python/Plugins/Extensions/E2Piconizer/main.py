@@ -224,7 +224,7 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
                 self.openDirectoryBrowserCB,
                 LocationBox,
                 windowTitle=_("Choose Directory:"),
-                text=_("Choose directory"),
+                text=_("Choose Directory"),
                 currDir=str(path),
                 bookmarks=config.movielist.videodirs,
                 autoAdd=True,

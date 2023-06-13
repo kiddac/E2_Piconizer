@@ -142,11 +142,19 @@ class E2Piconizer_DownloadPicons(Screen):
 
                 if cfg.source.value != "Local":
                     for i in range(self.job_total):
-                        try:
-                            results = executor.submit(self.fetch_url, self.selected, i)
-                            results.add_done_callback(self.log_result)
-                        except Exception as e:
-                            print(e)
+
+                        if str(self.selected[i][3]).startswith("http"):
+                            try:
+                                results = executor.submit(self.fetch_url, self.selected, i)
+                                results.add_done_callback(self.log_result)
+                            except Exception as e:
+                                print(e)
+                        else:
+                            try:
+                                results = executor.submit(self.makeLocalPicon, self.selected, i)
+                                results.add_done_callback(self.log_result)
+                            except Exception as e:
+                                print(e)
                 else:
                     for i in range(self.job_total):
                         try:
