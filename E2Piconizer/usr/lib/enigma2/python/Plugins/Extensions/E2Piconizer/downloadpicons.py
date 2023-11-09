@@ -27,11 +27,6 @@ except:
     from httplib import HTTPConnection
     HTTPConnection.debuglevel = 0
 
-try:
-    requests.packages.urllib3.disable_warnings()
-except:
-    pass
-
 
 class E2Piconizer_DownloadPicons(Screen):
 
@@ -98,18 +93,21 @@ class E2Piconizer_DownloadPicons(Screen):
 
         if response.status_code == 200:
             if response:
-                image_file = io.BytesIO(response.content)
+                try:
+                    image_file = io.BytesIO(response.content)
 
-                piconname = self.selected[i][0]
+                    piconname = self.selected[i][0]
 
-                if pythonVer == 2:
-                    piconname = unicodedata.normalize("NFKD", unicode(piconname, "utf_8", errors="ignore")).encode("ASCII", "ignore")
-                elif pythonVer == 3:
-                    piconname = unicodedata.normalize("NFKD", piconname).encode("ASCII", "ignore").decode("ascii")
+                    if pythonVer == 2:
+                        piconname = unicodedata.normalize("NFKD", unicode(piconname, "utf_8", errors="ignore")).encode("ASCII", "ignore")
+                    elif pythonVer == 3:
+                        piconname = unicodedata.normalize("NFKD", piconname).encode("ASCII", "ignore").decode("ascii")
 
-                piconname = re.sub("[^a-z0-9]", "", piconname.replace("&", "and").replace("+", "plus").replace("*", "star").lower())
+                    piconname = re.sub("[^a-z0-9]", "", piconname.replace("&", "and").replace("+", "plus").replace("*", "star").lower())
 
-                self.makePicon(image_file, piconname)
+                    self.makePicon(image_file, piconname)
+                except:
+                    image_file = None
 
     def log_result(self, result=None):
         self.progresscurrent += 1

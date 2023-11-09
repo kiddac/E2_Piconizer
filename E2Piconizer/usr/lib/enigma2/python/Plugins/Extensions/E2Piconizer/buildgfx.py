@@ -3,11 +3,17 @@
 
 from .plugin import graphic_directory, glass_directory
 from PIL import Image, ImageOps, ImageDraw, ImageChops, ImageFile, PngImagePlugin
+from struct import unpack_from
+
 import re
 import sys
 
 
 _simple_palette = re.compile(b"^\xff*\x00\xff*$")
+
+
+def i16(c, o=0):
+    return unpack_from(">H", c, o)[0]
 
 
 def mycall(self, cid, pos, length):

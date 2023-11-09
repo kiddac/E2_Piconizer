@@ -31,11 +31,6 @@ except:
     from httplib import HTTPConnection
     HTTPConnection.debuglevel = 0
 
-try:
-    requests.packages.urllib3.disable_warnings()
-except:
-    pass
-
 
 class E2Piconizer_SelectPicons(Screen):
 
@@ -282,7 +277,7 @@ class E2Piconizer_SelectPicons(Screen):
 
         # combine uk & ROI json files
         if cfg.source.value == "Sky UK":
-            channels_all = {x[self.ptitle]: x for x in channels_json[0] + channels_json[1] if x['adult'] is False}.values()
+            channels_all = {x[self.ptitle]: x for x in channels_json[0] + channels_json[1] if "adult" in x and x['adult'] is False}.values()
         else:
             channels_all = channels_json[0]
 

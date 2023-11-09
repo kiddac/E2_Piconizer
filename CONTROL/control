@@ -1,8 +1,9 @@
 Package: enigma2-plugin-extensions-e2piconizer
-Version: 1.24-20230918
+Version: 1.25-20231109
 Section: extra
 Priority: optional
 Architecture: all
 Maintainer: kiddac
 Description: E2 Piconizer - Picon Downloader/Creator
 Source: https://www.linuxsat-support.com
+
