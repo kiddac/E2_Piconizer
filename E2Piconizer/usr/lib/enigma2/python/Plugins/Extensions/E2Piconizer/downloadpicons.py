@@ -123,7 +123,7 @@ class E2Piconizer_DownloadPicons(Screen):
                 try:
                     self.timer3.callback.append(self.finished)
                 except:
-                    self.self.finished()
+                    self.finished()
             self.timer3.start(3000, True)
 
     def buildPicons(self):
