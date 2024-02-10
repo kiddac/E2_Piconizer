@@ -6,6 +6,8 @@ from . import buildgfx
 from . import E2Globals
 
 from .plugin import skin_path, cfg, hdr, hasConcurrent, hasMultiprocessing, pythonVer
+from unicodedata import normalize
+
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ProgressBar import ProgressBar
@@ -17,7 +19,6 @@ from Screens.Screen import Screen
 import io
 import os
 import re
-import unicodedata
 import requests
 
 try:
@@ -26,6 +27,9 @@ try:
 except:
     from httplib import HTTPConnection
     HTTPConnection.debuglevel = 0
+
+if pythonVer == 3:
+    unicode = str
 
 
 class E2Piconizer_DownloadPicons(Screen):
@@ -99,9 +103,9 @@ class E2Piconizer_DownloadPicons(Screen):
                     piconname = self.selected[i][0]
 
                     if pythonVer == 2:
-                        piconname = unicodedata.normalize("NFKD", unicode(piconname, "utf_8", errors="ignore")).encode("ASCII", "ignore")
+                        piconname = normalize("NFKD", unicode(piconname, "utf_8", errors="ignore")).encode("ASCII", "ignore")
                     elif pythonVer == 3:
-                        piconname = unicodedata.normalize("NFKD", piconname).encode("ASCII", "ignore").decode("ascii")
+                        piconname = normalize("NFKD", piconname).encode("ASCII", "ignore").decode()
 
                     piconname = re.sub("[^a-z0-9]", "", piconname.replace("&", "and").replace("+", "plus").replace("*", "star").lower())
 
@@ -198,9 +202,9 @@ class E2Piconizer_DownloadPicons(Screen):
         piconname = lfile[i][0]
 
         if pythonVer == 2:
-            piconname = unicodedata.normalize("NFKD", unicode(piconname, "utf_8", errors="ignore")).encode("ASCII", "ignore")
+            piconname = normalize("NFKD", unicode(piconname, "utf_8", errors="ignore")).encode("ASCII", "ignore")
         elif pythonVer == 3:
-            piconname = unicodedata.normalize("NFKD", piconname).encode("ASCII", "ignore").decode("ascii")
+            piconname = normalize("NFKD", piconname).encode("ASCII", "ignore").decode("ascii")
 
         piconname = re.sub("[^a-z0-9]", "", piconname.replace("&", "and").replace("+", "plus").replace("*", "star").lower())
 
