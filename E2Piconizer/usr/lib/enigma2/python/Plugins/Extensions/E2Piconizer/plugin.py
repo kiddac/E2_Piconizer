@@ -55,9 +55,7 @@ testpicons = os.listdir(testpicons_directory)
 
 tempdirectory = "/var/volatile/tmp/tempdownload"
 
-hdr = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
-}
+hdr = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'}
 
 SourceList = [
     ("Sky UK", "Sky UK/IE"),
