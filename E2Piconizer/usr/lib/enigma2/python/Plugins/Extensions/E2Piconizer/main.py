@@ -35,7 +35,7 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
         with open(skin, "r") as f:
             self.skin = f.read()
 
-        self.setup_title = (_("Settings"))
+        self.setup_title = _("Settings")
 
         self.onChangedEntry = []
         self.list = []
@@ -81,7 +81,7 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
         if dependencies is False:
             os.chmod("/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh", 0o0755)
             cmd1 = ". /usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/dependencies.sh"
-            self.session.openWithCallback(self.initConfig, Console, title="Checking Python Dependencies", cmdlist=[cmd1], closeOnSuccess=False)
+            self.session.openWithCallback(self.initConfig, Console, title="Checking Python Dependencies", cmdlist=[cmd1], closeOnSuccess=True)
         else:
             self.initConfig()
 
