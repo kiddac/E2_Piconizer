@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from . import _
-from . import buildgfx
-from . import selectpicons
 from . import E2Globals
 
 from .plugin import skin_path, cfg, testpicons_directory, pythonFull
@@ -204,6 +202,7 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
                 x[1].save()
             cfg.save()
             configfile.save()
+        from . import selectpicons
         self.session.open(selectpicons.E2Piconizer_SelectPicons)
 
     def ok(self):
@@ -267,6 +266,7 @@ class E2Piconizer_Main(ConfigListScreen, Screen):
         self.updatePreview(E2Globals.piconSize)
 
     def updatePreview(self, piconSize):
+        from . import buildgfx
         bg = buildgfx.createEmptyImage(piconSize)
 
         if screenwidth.width() > 1280:

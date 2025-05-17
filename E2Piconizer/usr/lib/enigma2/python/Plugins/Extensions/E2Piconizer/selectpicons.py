@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from . import _
-from . import buildgfx
-from . import downloadpicons
 from . import E2Globals
 
 from .E2SelectionList import E2PSelectionList, E2PSelectionEntryComponent
@@ -154,6 +152,7 @@ class E2Piconizer_SelectPicons(Screen):
         if self["text"] == "":
             return
         else:
+            from . import downloadpicons
             selected = self["list"].getSelectionsList()
             self.session.openWithCallback(self.close, downloadpicons.E2Piconizer_DownloadPicons, selected)
 
@@ -426,6 +425,7 @@ class E2Piconizer_SelectPicons(Screen):
                     self.temp = ""
 
     def updatePreview(self, piconSize):
+        from . import buildgfx
         bg = buildgfx.createEmptyImage(piconSize)
 
         if cfg.background.value == "colour":
