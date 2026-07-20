@@ -275,6 +275,11 @@ class E2Piconizer_SelectPicons(Screen):
                         print(e)
 
         # combine uk & ROI json files
+
+        if len(channels_json) < 2:
+            self["text"].setText(_("Failed to fetch channel list. Please try again later."))
+            return
+
         if cfg.source.value == "Sky UK":
             channels_all = {x[self.ptitle]: x for x in channels_json[0] + channels_json[1] if "adult" in x and x['adult'] is False}.values()
         else:

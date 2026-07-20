@@ -48,11 +48,12 @@ def patched_load(self):
         return self.im.pixel_access(self.readonly)
 
 
+# png hack for older versions of PIL library
 def mycall(self, cid, pos, length):
-    if cid.decode("ascii") == "tRNS":
+    cid_str = cid.decode("ascii")
+    if cid_str == "tRNS":
         return self.chunk_TRNS(pos, length)
-    else:
-        return getattr(self, "chunk_" + cid.decode("ascii"))(pos, length)
+    return getattr(self, "chunk_" + cid_str)(pos, length)
 
 
 def mychunk_TRNS(self, pos, length):

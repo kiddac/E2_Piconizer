@@ -1,7 +1,7 @@
 
 <screen name="e2piconizerSelect" position="0,0" size="1280,720" backgroundColor="#15263d" flags="wfNoBorder">
 
-        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/hd/default/images/background.jpg" position="0,0" size="1280,720" zPosition="-2"/>
+        <ePixmap pixmap="/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/skin/hd/default/images/background.png" alphatest="off" position="0,0" size="1280,720" zPosition="-2"/>
 
         <widget source="session.VideoPicture" render="Pig" position="0,0"  size="306,172" backgroundColor="#ff000000" zPosition="2" />
 
